@@ -127,14 +127,31 @@ if st.session_state.idComunidad>0:
         dfExc = pd.DataFrame(mExcedentes,index=indicesUsr,columns=["Excedentes [kWh]"])
         dfF = dfRep.join(dfExc)
         dfF = dfF.join(dfCon)
+        dfF2 = dfF.copy()
+        dfF2.index = [i for i in range(len(mConsumos))]
 
-        matrizBarras = np.concatenate((mConsumos, mReparto,mExcedentes), axis=0)
+        # matrizBarras = np.array([mConsumos, mReparto,mExcedentes])
 
         st.markdown("")
-        # st.bar_chart(dfF,stack=False, x_label="Usuarios",y_label="kWh")
-        st.bar_chart(matrizBarras,stack=False, x_label="Usuarios",y_label="kWh")
+        st.bar_chart(dfF2 ,stack=False, x_label="Usuarios",y_label="kWh")
+        # st.bar_chart(matrizBarras.T,stack=False,x_label="Usuarios",y_label="kWh")
         st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
-        st.dataframe(dfF)
+        # configuracion_colus = st.column_config.Column(
+        #     "Filas",
+        #     width="small"
+        # )
+        # st.dataframe(dfF,column_config = {configuracion_colus})
+        st.data_editor(
+                        dfF,
+                        column_config={
+                            "_index": st.column_config.Column(
+                                "Usuarios",
+                                width="medium",
+                                required=True,
+                            )
+                        },
+                        hide_index=False,
+                    )
 
         st.markdown("Con estos datos, se puede obtener una aproximación del período mínimo necesario para la amortización de la inversión de la instalación. Sin embargo, debido a que, como se ha indicado, los valores de los consumos son aproximaciones, los usuarios de la simulación son usuarios tipo y el precio de la electricidad es variable, ese valor puede no coincidir con el tiempo de amortización real.")
 
@@ -156,10 +173,24 @@ if st.session_state.idComunidad>0:
         st.markdown("El porcentaje dedicado a pobreza energética es **"+str(st.session_state.datoscomunidad["energy_poverty"])+"%** que es el porcentaje de energía que se dedicará para los casos seleccionados como pobreza energética seleccionados por la presente comunidad de "+str(st.session_state.nComunidad))
 
         dfCoef = pd.DataFrame(mCoef,index=indicesUsr,columns=["%"])
-        st.bar_chart(dfCoef,x_label="Usuario", y_label="%",)
+        
+        dfCoef2 = dfCoef.copy()
+        dfCoef2.index = [i for i in range(len(mConsumos))]
+        st.bar_chart(dfCoef2,x_label="Usuario", y_label="%",)
 
         st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
-        st.dataframe(dfCoef)
+        # st.dataframe(dfCoef, width = 1000)
+        st.data_editor(
+                        dfCoef,
+                        column_config={
+                            "_index": st.column_config.Column(
+                                "Usuarios",
+                                width="large",
+                                required=True,
+                            )
+                        },
+                        hide_index=False,
+                    )
 
         st.write("\n")
         st.write("\n")
