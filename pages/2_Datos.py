@@ -67,8 +67,8 @@ with tab1:
     st.markdown("### Datos Generales")
     nombreCE = st.text_input("Nombre de la comunidad *",help="Poner el nombre que tiene la comunidad.")
     ubicacion = st.text_input("Ubicación *",help="Poner el nombre de la ciudad o pueblo. Por ejemplo: Zaragoza.")
-    descripcion = st.text_area("Descripción de la comunidad para el informe *", value = "La comunidad [Nombre] es una comunidad nueva, cuya creación está inspirada en valores como la protección del medioambiente, el desarrollo tecnológico y la aportación a la sociedad. La comunidad energética busca ayudar en la descarbonización del medioambiente, aportando recursos como la localización y la inversión inicial, esperando cumplir con los objetivos de reducir, en parte, la dependencia energética de la comunidad, de ayudar al medioambiente y la sociedad y promover la inserción de esta tecnología y ayudar en su implementación.",height=150,max_chars=5000)
-    st.session_state.informe["descripcion"] = descripcion
+    # descripcion = st.text_area("Descripción de la comunidad para el informe *", value = "La comunidad [Nombre] es una comunidad nueva, cuya creación está inspirada en valores como la protección del medioambiente, el desarrollo tecnológico y la aportación a la sociedad. La comunidad energética busca ayudar en la descarbonización del medioambiente, aportando recursos como la localización y la inversión inicial, esperando cumplir con los objetivos de reducir, en parte, la dependencia energética de la comunidad, de ayudar al medioambiente y la sociedad y promover la inserción de esta tecnología y ayudar en su implementación.",height=150,max_chars=5000)
+    # st.session_state.informe["descripcion"] = descripcion
     
     # st.markdown("### Información económica")
     coste = 100000.00
