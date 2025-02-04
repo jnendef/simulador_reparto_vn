@@ -42,19 +42,18 @@ tipologiaSB = {
     10:"Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
 }
 
-st.markdown("# Resultados")
+st.markdown("# Análisis de reparto de la energía")
 
 
 meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
 st.write("Zaragoza, "+str(dt.datetime.today().day)+" de "+meses[dt.datetime.today().month-1]+" de "+str(dt.datetime.today().year))
 
-st.markdown("## Comunidad: "+str(st.session_state.nComunidad))
-try:
-    st.markdown(str(st.session_state.informe["descripcion"]))
-except:
-    st.write()
-st.markdown("## Simulación para el año: "+str(st.session_state.anyo))
-st.markdown("Simulación para el año seleccionado en la simulación. Los resultados de este informe son previsiones que se realizan en base a consumos tipo que no tienen por qué coincidir con el consumo real de los usuarios. Es una aproximación que sirve de orientación para poder tomar una decisión respecto a la comunidad.")
+st.markdown("## Comunidad "+str(st.session_state.nComunidad))
+
+st.markdown("Las comunidades energéticas son entidades jurídicas basadas en la participación abierta y voluntaria, autónomas y efectivamente controladas por socios o miembros que están situados en las proximidades de los proyectos de energías renovables que sean propiedad de dichas entidades jurídicas y que estas hayan desarrollado, cuyos socios o miembros sean personas físicas, pymes o autoridades locales, incluidos los municipios y cuya finalidad primordial sea proporcionar beneficios medioambientales, económicos o sociales a sus socios o miembros o a las zonas locales donde operan, en lugar de ganancias financieras.")
+
+st.markdown("## Simulación para el año "+str(st.session_state.anyo))
+st.markdown("Los resultados de este informe son previsiones que se realizan en base a consumos tipo que no tienen por qué coincidir con el consumo real de los usuarios. Es una aproximación que sirve de orientación para poder tomar una decisión respecto a la comunidad.")
 st.sidebar.markdown(
     """<a href="https://endef.com/">
     <img src="data:;base64,{}" width="200">
@@ -118,11 +117,11 @@ if st.session_state.idComunidad>0:
         if st.session_state.informe["cantidadEO"] > 0.0:
             texto = texto + ", cuenta con una potencia eólica instalada de "+str(st.session_state.informe["cantidadEO"])+"kW"
         if st.session_state.informe["cantidadBat"] > 0.0:
-            texto = texto + " y cuenta con un almacenamiento instalado de "+str(st.session_state.informe["cantidadBat"])+"kW"
+            texto = texto + " y cuenta con "+str(st.session_state.informe["cantidadBat"])+"kWh de almacenamiento"
         texto += "."
 
         st.markdown(texto)
-        st.markdown(" En el siguiente gráfico de barras se pueden apreciar los valores de los consumos, reparto y excedentes, en valores promedio, para cada usuario de la comunidad, en kWh, para el período del año especificado en la simulación("+str(st.session_state.anyo)+").")
+        st.markdown(" En el siguiente gráfico de barras se pueden apreciar los valores de los consumos, reparto y excedentes, en valores promedio, para cada usuario de la comunidad, en kWh, para el año especificado en la simulación("+str(st.session_state.anyo)+").")
         dfCon = pd.DataFrame(mConsumos,index=indicesUsr,columns=["Consumos [kWh]"])
         dfRep = pd.DataFrame(mReparto,index=indicesUsr,columns=["Reparto [kWh]"])
         dfExc = pd.DataFrame(mExcedentes,index=indicesUsr,columns=["Excedentes [kWh]"])
