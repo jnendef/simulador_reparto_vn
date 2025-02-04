@@ -128,8 +128,11 @@ if st.session_state.idComunidad>0:
         dfF = dfRep.join(dfExc)
         dfF = dfF.join(dfCon)
 
+        matrizBarras = np.concatenate((mConsumos, mReparto,mExcedentes), axis=0)
+
         st.markdown("")
-        st.bar_chart(dfF,stack=False, x_label="Usuarios",y_label="kWh")
+        # st.bar_chart(dfF,stack=False, x_label="Usuarios",y_label="kWh")
+        st.bar_chart(matrizBarras,stack=False, x_label="Usuarios",y_label="kWh")
         st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
         st.dataframe(dfF)
 
