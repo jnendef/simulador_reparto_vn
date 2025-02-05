@@ -153,8 +153,6 @@ if st.session_state.idComunidad>0:
                         hide_index=False,
                     )
 
-        st.markdown("Con estos datos, se puede obtener una aproximación del período mínimo necesario para la amortización de la inversión de la instalación. Sin embargo, debido a que, como se ha indicado, los valores de los consumos son aproximaciones, los usuarios de la simulación son usuarios tipo y el precio de la electricidad es variable, ese valor puede no coincidir con el tiempo de amortización real.")
-
         # st.markdown("### Energía Repartida Total Anual Por Usuario")
         # st.bar_chart(mReparto)
         # dfRep = pd.DataFrame(mReparto,index=indicesUsr)
@@ -170,7 +168,7 @@ if st.session_state.idComunidad>0:
         st.markdown("En esta simulación se proponen los posibles coeficientes de reparto basando los cálculos en los consumos de los usuarios de la comunidad y distribuyendo la energía producida proporcionalmente a estos consumos. Con este cálculo se busca que haya el mínimo de excedente vertido a red porque permite sacar el mayor rendimiento a la producción ya que, actualmente, el precio de venta de la electricidad es menor que el coste de ésta para el usuario y, por lo tanto, se obtiene una recuperación de lo invertido en un tiempo menor si se consume toda la energía en lugar de venderla.")
         st.markdown("El coeficiente máximo seleccionado para la simulación es **"+str(st.session_state.datoscomunidad["max_participation"])+"%** que consiste en el valor máximo que puede tomar en la simulación el coeficiente de reparto para un único usuario. Se puede poner esta restricción para el caso de que un usuario tenga un consumo muy superior y evitar que acapare toda la producción.")
         st.markdown("El coeficiente mínimo seleccionado para la simulación es **"+str(st.session_state.datoscomunidad["min_participation"])+"%** que consiste en el valor mínimo que puede tomar en la simulación el coeficiente de reparto para un único usuario. Se puede poner esta restricción para evitar que un usuario tenga muy poca participación debido a tener poco consumo.")
-        st.markdown("El porcentaje dedicado a pobreza energética es **"+str(st.session_state.datoscomunidad["energy_poverty"])+"%** que es el porcentaje de energía que se dedicará para los casos seleccionados como pobreza energética seleccionados por la presente comunidad de "+str(st.session_state.nComunidad))
+        st.markdown("El porcentaje dedicado a pobreza energética es **"+str(st.session_state.datoscomunidad["energy_poverty"])+"%** que es el porcentaje de energía que se dedicará para los casos seleccionados.")
 
         dfCoef = pd.DataFrame(mCoef,index=indicesUsr,columns=["%"])
         
