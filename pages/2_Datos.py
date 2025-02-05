@@ -451,8 +451,8 @@ with tab7:
 
     st.header("Resumen de datos")
 
-    st.write("Comunidad Energética:")
-    st.dataframe(dfComu.tail(1))
+    # st.write("Comunidad Energética:")
+    # st.dataframe(dfComu.tail(1))
 
     st.write("Generadores FV:")
     st.dataframe(dfFV)
