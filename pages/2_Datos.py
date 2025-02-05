@@ -542,4 +542,5 @@ with tab8:
         calcula2(st.session_state.procesosCurso,date_year)
         st.session_state.anyo = date_year
         st.session_state.saltoSimu = True
+        st.success("Puede ver los resultados yendo a los enlaces de Resultados Generales e Individuales de la barra lateral.")
     st.write("Momento de inicio del proceso: ", st.session_state.procesosCurso)
