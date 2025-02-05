@@ -7,6 +7,7 @@ import datetime as dt
 import base64
 # import logging
 
+import numpy as np
 import pandas as pd
 
 from pages.scripts.envios import envioDatos
@@ -114,6 +115,15 @@ with tab2:
     descFV = st.text_input("Descripción de los generadores FV",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de una planta fotovoltaica.", disabled= not ce)
     latiFV = st.number_input("Latitud instalación", disabled= not ce,value = 41.661322,max_value=90.0,min_value=-90.0,format="%2.6f")
     longFV = st.number_input("Longitud instalación", disabled= not ce,value = -0.880849,max_value=180.0,min_value=-180.0,format="%2.6f")
+    df = pd.DataFrame(
+        {
+            "col1": np.array([latiFV]),
+            "col2": np.array([longFV]),
+        }
+    )
+
+    st.map(df, latitude="col1", longitude="col2")
+    # st.map(pd.DataFrame([latiFV,longFV],columns=["lat","long"]))
     # nModulos = st.number_input("Número de módulos", disabled= not ce, min_value=0,step=1)
     nModulos = 10
     pPicoFV = st.number_input("Potencia pico total FV [kW]",help="Poner la potencia pico de toda la planta fotovoltaica situada en las coordenadas que se han indicado.",min_value=0.0, disabled= not ce)
@@ -172,6 +182,14 @@ with tab3:
     descEo = st.text_input("Descripción de los generadores eólicos",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de un generador eólico.", disabled= not ce)
     latiEo = st.number_input("Latitud eólico", disabled= not ce,value = 41.661322,max_value=90.0,min_value=-90.0,format="%2.6f")
     longEo = st.number_input("Longitud eólico", disabled= not ce,value = -0.880849,max_value=180.0,min_value=-180.0,format="%2.6f")
+    df = pd.DataFrame(
+        {
+            "col1": np.array([latiEo]),
+            "col2": np.array([longEo]),
+        }
+    )
+
+    st.map(df, latitude="col1", longitude="col2")
     pPicoEo = st.number_input("Potencia pico eólico [kW]",help="Potencia pico del aerogenerador.", disabled= not ce, min_value= 0.0)
 
     deshabilitadoEO = True
@@ -235,10 +253,10 @@ with tab4:
     # descMaxBat =   st.number_input("máxima descarga horaria [kWh]",disabled= not gen, min_value=0.0)
 
     voltajeBat =   220
-    capacidadBat = st.number_input("Capacidad de las baterías [kWh]",disabled= not gen, min_value=0.0)
+    capacidadBat = st.number_input("Capacidad de las baterías [kWh]", help = "Capacidad nominal de las baterías en kWh" ,disabled= not gen, min_value=0.0)
     cargaMaxBat =  capacidadBat
     cargaMinBat =  0.1*capacidadBat
-    arranquedBat = st.number_input("Potencia [kW]",disabled= not gen, min_value=0.0)
+    arranquedBat = st.number_input("Potencia [kW]", help = "Potencia de las baterías que se obtiene de multiplicar la tensión nominal y la intensidad nominal. Si no tiene claros estos valores, poner la mitad del valor de la capacidad." ,disabled= not gen, min_value=0.0)
     descMaxBat =  arranquedBat*1.0
 
     deshabilitadoBat = True
@@ -435,10 +453,28 @@ with tab7:
 
     st.write("Generadores FV:")
     st.dataframe(dfFV)
+    
+    dfaux = pd.DataFrame(
+        {
+            "col1": dfFV["latitud"],
+            "col2": dfFV["longitud"],
+        }
+    )
+
+    st.map(dfaux, latitude="col1", longitude="col2", color = [0.2, 0.2, 0.5, 0.5])
 
     st.write("Generadores eólicos:")
     st.dataframe(dfEO)
 
+    
+    dfaux2 = pd.DataFrame(
+        {
+            "col1": dfEO["latitud"],
+            "col2": dfEO["longitud"],
+        }
+    )
+
+    st.map(dfaux2, latitude="col1", longitude="col2", color = [0.2, 0.5, 0.2, 0.5])
     st.write("Almacenamiento:")
     st.dataframe(dfBat)
 
@@ -455,7 +491,7 @@ with tab7:
             st.session_state["authentication_status"] = None
             st.rerun(scope="app")
     with col3:
-        if st.button("Confirmar Datos", disabled= not usr):
+        if st.button("Confirmar Datos",type="primary", disabled= not usr):
             currentDateTime = dt.datetime.now()
             start = currentDateTime.strftime('%Y-%m-%d %H:%M:%S')
             st.session_state.procesosCurso = start
@@ -490,7 +526,7 @@ with tab8:
         st.write()
         simulable = False
 
-    date_year = st.number_input("Año de la simulación", disabled= not simulable and not st.session_state.envioInfo, min_value=2020,step=1)
+    date_year = st.number_input("Año de la simulación", disabled= not simulable and not st.session_state.envioInfo, value = int(dt.datetime.now().year), min_value=2020,step=1)
     
 
     if 'run_button' in st.session_state and st.session_state.run_button == True:
@@ -498,7 +534,7 @@ with tab8:
     else:
         st.session_state.running = False
 
-    if st.button('Simular', disabled=((not any(st.session_state.procesosCurso)) or st.session_state.saltoSimu or st.session_state.running), key='run_button'):
+    if st.button('Simular', disabled=((not any(st.session_state.procesosCurso)) or st.session_state.saltoSimu or st.session_state.running), type="primary", key='run_button'):
         # if st.button("Simular",disabled= ((not any(st.session_state.procesosCurso)) or st.session_state.saltoSimu)):
         calcula2(st.session_state.procesosCurso,date_year)
         st.session_state.anyo = date_year
