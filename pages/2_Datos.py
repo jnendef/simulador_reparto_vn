@@ -16,7 +16,10 @@ from pages.scripts.calculos import calcula2
 # definicion de las funciones
 def borrar(campo,valores):
     # st.session_state[campo].remove(valores)
-    st.session_state[campo].pop(-1)
+    if len(st.session_state[campo])>0:
+        st.session_state[campo].pop(-1)
+    else:
+        pass
     return 
 
 def resetear(campo):
