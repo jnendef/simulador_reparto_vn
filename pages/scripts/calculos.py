@@ -64,7 +64,7 @@ def calcula2(start, date_year):
             logging.debug("Error en el proceso 2: "+str(e))
     else:
         st.error("Fallo en el Paso 1 del proceso, refresce la página, vuelva a cumplimentar y compruebe su conexión a internet.")
-        return
+        return False
     if proceso2:
         try:
             proceso3, VectorDatosBaterias = Paso3(agenteEjecucionMySql,idComunidad)
@@ -73,7 +73,7 @@ def calcula2(start, date_year):
             logging.debug("Error en el proceso 3: "+str(e))
     else:
         st.error("Fallo en el Paso 2 del proceso, refresce la página, vuelva a cumplimentar y compruebe su conexión a internet.")
-        return
+        return False
     if proceso3:
         try:
             proceso4, ComunidadEnergetica = Paso4(agenteEjecucionMySql,anyoDatosGuardarComunidad,idComunidad,bisiesto)
@@ -83,7 +83,8 @@ def calcula2(start, date_year):
             logging.debug("Error en el proceso 4: "+str(e))
     else:
         st.error("Fallo en el Paso 3 del proceso, refresce la página, vuelva a cumplimentar y compruebe su conexión a internet.")
-        return
+        return False
     if not proceso4:
         st.error("Fallo en el Paso 4 del proceso, refresce la página, vuelva a cumplimentar y compruebe su conexión a internet.")
-    return
+        return False
+    return True
