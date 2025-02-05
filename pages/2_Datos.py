@@ -116,8 +116,8 @@ with tab2:
     st.header("Generadores FV")
     st.markdown("### Formulario de incorporación generador FV")
     descFV = st.text_input("Descripción de los generadores FV",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de una planta fotovoltaica.", disabled= not ce)
-    latiFV = st.number_input("Latitud instalación", disabled= not ce,value = 41.661322,max_value=90.0,min_value=-90.0,format="%2.6f")
-    longFV = st.number_input("Longitud instalación", disabled= not ce,value = -0.880849,max_value=180.0,min_value=-180.0,format="%2.6f")
+    latiFV = st.number_input("Latitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce,value = 41.661322,max_value=90.0,min_value=-90.0,format="%2.6f")
+    longFV = st.number_input("Longitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce,value = -0.880849,max_value=180.0,min_value=-180.0,format="%2.6f")
     df = pd.DataFrame(
         {
             "col1": np.array([latiFV]),
@@ -183,8 +183,8 @@ with tab3:
     st.header("Generadores eólicos")
     st.markdown("### Formulario de incorporación generador Eólico")
     descEo = st.text_input("Descripción de los generadores eólicos",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de un generador eólico.", disabled= not ce)
-    latiEo = st.number_input("Latitud eólico", disabled= not ce,value = 41.661322,max_value=90.0,min_value=-90.0,format="%2.6f")
-    longEo = st.number_input("Longitud eólico", disabled= not ce,value = -0.880849,max_value=180.0,min_value=-180.0,format="%2.6f")
+    latiEo = st.number_input("Latitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = 41.661322,max_value=90.0,min_value=-90.0,format="%2.6f")
+    longEo = st.number_input("Longitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = -0.880849,max_value=180.0,min_value=-180.0,format="%2.6f")
     df = pd.DataFrame(
         {
             "col1": np.array([latiEo]),
