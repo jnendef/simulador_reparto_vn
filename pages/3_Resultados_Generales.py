@@ -187,6 +187,11 @@ if st.session_state.idComunidad>0:
                                 "Usuarios",
                                 width="large",
                                 required=True,
+                            ),
+                            "%": st.column_config.Column(
+                                "Porcentaje",
+                                width="medium",
+                                required=True,
                             )
                         },
                         hide_index=False,
