@@ -179,6 +179,8 @@ try:
     st.write("Coeficiente Promedio en el intervalo en Porcentaje: {}".format(str(df1.mean()["Coeficiente"])[:6]))
     # st.write(df1.mean())
 
+    st.dataframe(df1)
+
     col1,col2,col3 = st.columns(3)
 
     with col3:
