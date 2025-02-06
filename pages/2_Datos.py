@@ -3,6 +3,7 @@
 
 import streamlit as st
 import datetime as dt
+from geopy.geocoders import Nominatim 
 
 import base64
 # import logging
@@ -40,6 +41,11 @@ def camposDataframe(concepto, datos, columnas, add = True):
     df = pd.DataFrame(info, columns=columnas)
     return df
 
+#Creacion de un localizador de coordenadas
+geolocator = Nominatim(user_agent="aplication")
+if 'localizador' not in st.session_state:
+    st.session_state.localizador = geolocator.geocode("Zaragoza")
+    
 # Comienza la pagina
 st.title("DATOS")
 
@@ -64,6 +70,8 @@ gen = False
 bt = False
 usr = False
 sub = False
+
+location = None
 
 with tab1:
     st.info("Nota aclaratoria: Obligatorio cumplimentar Nombre de la comunidad y Ubicación. Recomendado realizar una descripción para el informe final")
@@ -90,7 +98,6 @@ with tab1:
 
     comunidadEnerg = {}
     colums = ("Nombre","Ubicacion","Coste","Amortizacion")
-
     addce = st.button("Crea comunidad",type="primary", disabled = deshabilitadoCE)
     dfComu = pd.DataFrame([])
     if addce:
@@ -98,6 +105,10 @@ with tab1:
         st.session_state.nComunidad = nombreCE
         st.session_state.saltoSimu = False
         st.success('Ya puedes pasar a la siguiente pestaña: Fotovoltaicos.', icon="✅")
+        try:
+            st.session_state.localizador = geolocator.geocode(ubicacion)
+        except:
+            pass
     if gralComu != None:
         dfComu = camposDataframe("comunidades",gralComu,colums,addce)
         conceptos = ["name", "location", "inst_cost", "inst_monthly_fee"]
@@ -106,6 +117,7 @@ with tab1:
         comunidadEnerg["id_administrator"] = 1
         ce = True
 
+    
 
 with tab2:
     st.info("Nota aclaratoria: Si hay eólica y no hay FV, puedes pasar al definir la generación eólica.")
@@ -113,11 +125,14 @@ with tab2:
         "Monocristalino":1,
         "Policristalino":2
     }
+    location = st.session_state.localizador
     st.header("Generadores FV")
     st.markdown("### Formulario de incorporación generador FV")
     descFV = st.text_input("Descripción de los generadores FV",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de una planta fotovoltaica.", disabled= not ce)
-    latiFV = st.number_input("Latitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce,value = 41.661322,max_value=90.0,min_value=-90.0,format="%2.6f")
-    longFV = st.number_input("Longitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce,value = -0.880849,max_value=180.0,min_value=-180.0,format="%2.6f")
+ 
+    latiFV = st.number_input("Latitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = location.latitude, max_value=90.0, min_value=-90.0,format="%2.6f")
+    longFV = st.number_input("Longitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = location.longitude, max_value=180.0, min_value=-180.0, format="%2.6f")
+    
     df = pd.DataFrame(
         {
             "col1": np.array([latiFV]),
@@ -179,12 +194,13 @@ with tab2:
 
 
 with tab3:
+    location = st.session_state.localizador
     st.info("Nota aclaratoria: Si hay FV y no hay eólica, puedes pasar a la siguiente pestaña")
     st.header("Generadores eólicos")
     st.markdown("### Formulario de incorporación generador Eólico")
     descEo = st.text_input("Descripción de los generadores eólicos",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de un generador eólico.", disabled= not ce)
-    latiEo = st.number_input("Latitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = 41.661322,max_value=90.0,min_value=-90.0,format="%2.6f")
-    longEo = st.number_input("Longitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = -0.880849,max_value=180.0,min_value=-180.0,format="%2.6f")
+    latiEo = st.number_input("Latitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = location.latitude,max_value=90.0,min_value=-90.0,format="%2.6f")
+    longEo = st.number_input("Longitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = location.longitude,max_value=180.0,min_value=-180.0,format="%2.6f")
     df = pd.DataFrame(
         {
             "col1": np.array([latiEo]),
@@ -539,8 +555,9 @@ with tab8:
 
     if st.button('Simular', disabled=((not any(st.session_state.procesosCurso)) or st.session_state.saltoSimu or st.session_state.running), type="primary", key='run_button'):
         # if st.button("Simular",disabled= ((not any(st.session_state.procesosCurso)) or st.session_state.saltoSimu)):
-        calcula2(st.session_state.procesosCurso,date_year)
+        exitoSim = calcula2(st.session_state.procesosCurso,date_year)
         st.session_state.anyo = date_year
         st.session_state.saltoSimu = True
-        st.success("Puede ver los resultados yendo a los enlaces de Resultados Generales e Individuales de la barra lateral.")
-    st.write("Momento de inicio del proceso: ", st.session_state.procesosCurso)
+        if exitoSim:
+            st.success("Puede ver los resultados yendo a los enlaces de Resultados Generales e Individuales de la barra lateral.")
+            st.write("Momento de inicio del proceso: ", st.session_state.procesosCurso)
