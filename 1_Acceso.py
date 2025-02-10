@@ -9,9 +9,6 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 
-import yaml
-from yaml.loader import SafeLoader
-
 import base64
 # from streamlit import config
 
