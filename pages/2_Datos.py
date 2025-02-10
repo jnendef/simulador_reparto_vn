@@ -215,10 +215,10 @@ with tab3:
 
     if descEo=="":
         st.warning("Falta la descripción")
-    elif latiEo == "":
-        st.warning("Falta la latitud")
-    elif longEo == "":
-        st.warning("Falta la longitud")
+    # elif latiEo == "":
+    #     st.warning("Falta la latitud")
+    # elif longEo == "":
+    #     st.warning("Falta la longitud")
     elif pPicoEo == 0.0:
         st.warning("Falta la potencia pico")
     else:
@@ -227,7 +227,7 @@ with tab3:
 
     AddGenEo = st.button("Añade Eólica",type="primary", disabled= (not ce and deshabilitadoEO))
 
-    aux = (descEo,latiFV,longFV,pPicoEo)
+    aux = (descEo,latiEo,longEo,pPicoEo)
     colums = ("Descripcion","latitud","longitud","Wp")
 
     dfEO = camposDataframe("eolicos",aux,colums,AddGenEo)
