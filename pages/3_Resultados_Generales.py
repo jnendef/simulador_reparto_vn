@@ -125,7 +125,7 @@ if st.session_state.idComunidad>0:
         dfCon = pd.DataFrame(mConsumos,index=indicesUsr,columns=["Consumos [kWh]"])
         dfRep = pd.DataFrame(mReparto,index=indicesUsr,columns=["Reparto [kWh]"])
         dfExc = pd.DataFrame(mExcedentes,index=indicesUsr,columns=["Excedentes [kWh]"])
-        dfF = dfRep.join(dfExc)
+        dfF = dfExc.join(dfRep)
         dfF = dfF.join(dfCon)
         dfF2 = dfF.copy()
         dfF2.index = [i for i in range(len(mConsumos))]
@@ -133,7 +133,8 @@ if st.session_state.idComunidad>0:
         # matrizBarras = np.array([mConsumos, mReparto,mExcedentes])
 
         st.markdown("")
-        st.bar_chart(dfF2, horizontal = True, width = 500, stack=False, x_label="Usuarios", y_label="kWh")
+        st.markdown("Valores promedios de consumo, reparto y excedentes")
+        st.bar_chart(dfF2, horizontal = True, width = 500, stack=False,color= ["#00C42D", "#2645CB", "#FFC400"], x_label="Usuarios", y_label="kWh")
         # st.bar_chart(matrizBarras.T,stack=False,x_label="Usuarios",y_label="kWh")
         st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
         # configuracion_colus = st.column_config.Column(
@@ -174,6 +175,7 @@ if st.session_state.idComunidad>0:
         
         dfCoef2 = dfCoef.copy()
         dfCoef2.index = [i for i in range(len(mConsumos))]
+        st.markdown("Valores promedios de coeficientes de reparto por usuario")
         st.bar_chart(dfCoef2, horizontal = True, height = 500, width = 500, x_label="Usuario", y_label="%",)
 
         st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
