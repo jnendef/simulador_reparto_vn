@@ -51,6 +51,7 @@ def calcula2(start, date_year):
                     proceso1, VectorDatosProduccion, idComunidad = Paso1(agenteEjecucionMySql,i,anyoDatosGuardarComunidad,bisiesto)
                     status.progress(25)
                 except Exception as e:
+                    st.error("Fallo en el Paso 1 del proceso, refresce la página, vuelva a cumplimentar y compruebe su conexión a internet.Si se repite el fallo, consulte con el proveedor.")
                     logging.debug("Error en el proceso 1: "+str(e))
             else:
                 st.error("Faltan datos por completar o hay algún otro error. Comprobar logs.")
@@ -61,6 +62,7 @@ def calcula2(start, date_year):
             proceso2, VectorDatosConsumo = Paso2(agenteEjecucionMySql, idComunidad, bisiesto,anyoDatosGuardarComunidad)
             status.progress(50)
         except Exception as e:
+            st.error("Fallo en el Paso 2 del proceso, refresce la página, vuelva a cumplimentar y compruebe su conexión a internet.Si se repite el fallo, consulte con el proveedor.")
             logging.debug("Error en el proceso 2: "+str(e))
     else:
         st.error("Fallo en el Paso 1 del proceso, refresce la página, vuelva a cumplimentar y compruebe su conexión a internet.")
@@ -70,6 +72,7 @@ def calcula2(start, date_year):
             proceso3, VectorDatosBaterias = Paso3(agenteEjecucionMySql,idComunidad)
             status.progress(75)
         except Exception as e:
+            st.error("Fallo en el Paso 3 del proceso, refresce la página, vuelva a cumplimentar y compruebe su conexión a internet. Si se repite el fallo, consulte con el proveedor.")
             logging.debug("Error en el proceso 3: "+str(e))
     else:
         st.error("Fallo en el Paso 2 del proceso, refresce la página, vuelva a cumplimentar y compruebe su conexión a internet.")
@@ -80,6 +83,7 @@ def calcula2(start, date_year):
             status.progress(100)
             st.success('¡Simulación completa!', icon="✅")
         except Exception as e:
+            st.error("Fallo en el Paso 4 del proceso, refresce la página, vuelva a cumplimentar y compruebe su conexión a internet.Si se repite el fallo, consulte con el proveedor.")
             logging.debug("Error en el proceso 4: "+str(e))
     else:
         st.error("Fallo en el Paso 3 del proceso, refresce la página, vuelva a cumplimentar y compruebe su conexión a internet.")
