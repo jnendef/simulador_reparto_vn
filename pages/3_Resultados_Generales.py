@@ -152,6 +152,7 @@ if st.session_state.idComunidad>0:
                             )
                         },
                         hide_index=False,
+                        height = 43 * len(mConsumos),
                     )
 
         # st.markdown("### Energía Repartida Total Anual Por Usuario")
@@ -195,6 +196,7 @@ if st.session_state.idComunidad>0:
                             )
                         },
                         hide_index=False,
+                        height = 43 * len(mConsumos),
                     )
 
         st.write("\n")
