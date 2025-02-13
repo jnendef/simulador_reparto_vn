@@ -128,7 +128,7 @@ with tab2:
     location = st.session_state.localizador
     st.header("Generadores FV")
     st.markdown("### Formulario de incorporación generador FV")
-    descFV = st.text_input("Descripción de los generadores FV",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de una planta fotovoltaica.", disabled= not ce)
+    descFV = st.text_input("Descripción de los generadores FV", value = "FV1",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de una planta fotovoltaica.", disabled= not ce)
  
     latiFV = st.number_input("Latitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = location.latitude, max_value=90.0, min_value=-90.0,format="%2.6f")
     longFV = st.number_input("Longitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = location.longitude, max_value=180.0, min_value=-180.0, format="%2.6f")
@@ -198,7 +198,7 @@ with tab3:
     st.info("Nota aclaratoria: Si hay FV y no hay eólica, puedes pasar a la siguiente pestaña")
     st.header("Generadores eólicos")
     st.markdown("### Formulario de incorporación generador Eólico")
-    descEo = st.text_input("Descripción de los generadores eólicos",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de un generador eólico.", disabled= not ce)
+    descEo = st.text_input("Descripción de los generadores eólicos", value = "EO1",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de un generador eólico.", disabled= not ce)
     latiEo = st.number_input("Latitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = location.latitude,max_value=90.0,min_value=-90.0,format="%2.6f")
     longEo = st.number_input("Longitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = location.longitude,max_value=180.0,min_value=-180.0,format="%2.6f")
     df = pd.DataFrame(
@@ -259,7 +259,7 @@ with tab4:
     }
     st.header("Baterías")
     st.markdown("### Descripción de las Baterías")
-    descBat = st.text_input("Descripción sobre las baterías",help="Poner una breve descripción para diferenciar las baterías que quiere poner entre sí, ya que puedes hacer la simulación con más de una batería.",disabled= not gen)
+    descBat = st.text_input("Descripción sobre las baterías", value = "BAT1", help="Poner una breve descripción para diferenciar las baterías que quiere poner entre sí, ya que puedes hacer la simulación con más de una batería.",disabled= not gen)
     tipoBat = "Litio"
     # tipoBat = st.selectbox("Tecnología",["Litio", "Otras"],disabled= not gen)
     st.markdown("### Características técnicas")
