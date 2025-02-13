@@ -42,7 +42,7 @@ tipologiaSB = {
     10:"Vivienda unifamiliar dos adultos, uno o dos niños, calefacción gas y AC"
 }
 
-st.markdown("# Análisis de reparto de la energía")
+st.markdown("# Análisis de Comunidad")
 
 
 meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
@@ -115,9 +115,9 @@ if st.session_state.idComunidad>0:
         if st.session_state.informe["cantidadFV"] > 0.0:
             texto = texto + " cuenta con una potencia fotovoltaica instalada de "+str(st.session_state.informe["cantidadFV"])+"kW"
         if st.session_state.informe["cantidadEO"] > 0.0:
-            texto = texto + ", cuenta con una potencia eólica instalada de "+str(st.session_state.informe["cantidadEO"])+"kW"
+            texto = texto + ", la potencia eólica instalada es "+str(st.session_state.informe["cantidadEO"])+"kW"
         if st.session_state.informe["cantidadBat"] > 0.0:
-            texto = texto + " y cuenta con "+str(st.session_state.informe["cantidadBat"])+"kWh de almacenamiento"
+            texto = texto + " y "+str(st.session_state.informe["cantidadBat"])+"kWh de almacenamiento"
         texto += "."
 
         st.markdown(texto)
@@ -133,7 +133,7 @@ if st.session_state.idComunidad>0:
         # matrizBarras = np.array([mConsumos, mReparto,mExcedentes])
 
         st.markdown("")
-        st.bar_chart(dfF2 ,stack=False, x_label="Usuarios",y_label="kWh")
+        st.bar_chart(dfF2, horizontal = True, width = 500, stack=False, x_label="Usuarios", y_label="kWh")
         # st.bar_chart(matrizBarras.T,stack=False,x_label="Usuarios",y_label="kWh")
         st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
         # configuracion_colus = st.column_config.Column(
@@ -164,8 +164,8 @@ if st.session_state.idComunidad>0:
         # st.dataframe(dfExc)
 
         st.markdown("### Coeficientes de reparto")
-        st.markdown("Los coeficientes de reparto son los factores por los que se multiplica la producción para obtener el reparto de la energía. La elección del valor de estos coeficientes es decisión de la comunidad energética y se debe aceptar por parte de los miembros de ésta.")
-        st.markdown("En esta simulación se proponen los posibles coeficientes de reparto basando los cálculos en los consumos de los usuarios de la comunidad y distribuyendo la energía producida proporcionalmente a estos consumos. Con este cálculo se busca que haya el mínimo de excedente vertido a red porque permite sacar el mayor rendimiento a la producción ya que, actualmente, el precio de venta de la electricidad es menor que el coste de ésta para el usuario y, por lo tanto, se obtiene una recuperación de lo invertido en un tiempo menor si se consume toda la energía en lugar de venderla.")
+        st.markdown("Los coeficientes de reparto son los factores por los que se multiplica la producción para obtener el reparto de la energía producida. La elección del valor de estos coeficientes es decisión de la comunidad energética y se debe aceptar por parte de los miembros de ésta.")
+        st.markdown("En esta simulación se proponen los posibles coeficientes de reparto basando los cálculos en los consumos de los usuarios de la comunidad y distribuyendo la energía producida proporcionalmente a estos consumos. Con este cálculo se busca que haya el mínimo de excedente vertido a red porque permite sacar el mayor rendimiento a la producción.")
         st.markdown("El coeficiente máximo seleccionado para la simulación es **"+str(st.session_state.datoscomunidad["max_participation"])+"%** que consiste en el valor máximo que puede tomar en la simulación el coeficiente de reparto para un único usuario. Se puede poner esta restricción para el caso de que un usuario tenga un consumo muy superior y evitar que acapare toda la producción.")
         st.markdown("El coeficiente mínimo seleccionado para la simulación es **"+str(st.session_state.datoscomunidad["min_participation"])+"%** que consiste en el valor mínimo que puede tomar en la simulación el coeficiente de reparto para un único usuario. Se puede poner esta restricción para evitar que un usuario tenga muy poca participación debido a tener poco consumo.")
         st.markdown("El porcentaje dedicado a pobreza energética es **"+str(st.session_state.datoscomunidad["energy_poverty"])+"%** que es el porcentaje de energía que se dedicará para los casos seleccionados.")
@@ -174,7 +174,7 @@ if st.session_state.idComunidad>0:
         
         dfCoef2 = dfCoef.copy()
         dfCoef2.index = [i for i in range(len(mConsumos))]
-        st.bar_chart(dfCoef2,x_label="Usuario", y_label="%",)
+        st.bar_chart(dfCoef2, horizontal = True, height = 500, width = 500, x_label="Usuario", y_label="%",)
 
         st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
         # st.dataframe(dfCoef, width = 1000)
@@ -197,7 +197,16 @@ if st.session_state.idComunidad>0:
 
         st.write("\n")
         st.write("\n")
-        st.write("Esta información es facilitada por endef mediante el uso de software libre desarrollado para el apoyo a las comunidades energéticas.")
+        st.markdown("## Responsabilidades")
+        st.markdown("Esta información es facilitada por endef mediante el uso de software libre desarrollado para el apoyo a las comunidades energéticas. Esta app es una herramienta informática diseñada para realizar simulaciones con fines informativos y educativos. Si bien se han implementado metodologías rigurosas para mejorar la precisión de los resultados, Endef no garantiza la exactitud ni idoneidad de los datos generados.")
+
+        st.markdown("El usuario reconoce y acepta que:")
+
+        st.markdown("- Uso Bajo Responsabilidad Propia: El usuario es el único responsable de la aplicación de los resultados.")
+
+        st.markdown("- Limitación de Responsabilidad: En ningún caso Endef será responsable de daños directos, indirectos, incidentales, especiales o consecuentes, incluyendo, pero sin limitarse a, pérdidas económicas, interrupciones del negocio, daños a equipos o cualquier otro perjuicio derivado del uso o incapacidad de uso del software.")
+        st.markdown("Al utilizar esta app, el usuario acepta esta exención de responsabilidad en su totalidad.")
+        
         col1,col2,col3 = st.columns(3)
 
         with col1:
