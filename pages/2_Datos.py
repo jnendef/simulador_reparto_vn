@@ -272,10 +272,10 @@ with tab4:
     # descMaxBat =   st.number_input("máxima descarga horaria [kWh]",disabled= not gen, min_value=0.0)
 
     voltajeBat =   220
-    capacidadBat = st.number_input("Capacidad de las baterías [kWh]", help = "Capacidad nominal de las baterías en kWh" ,disabled= not gen, min_value=0.0)
+    capacidadBat = st.number_input("Capacidad de las baterías [kWh]", help = "Capacidad nominal de las baterías en kWh" , value = 0.0, disabled= not gen, min_value=0.0)
     cargaMaxBat =  capacidadBat
     cargaMinBat =  0.1*capacidadBat
-    arranquedBat = st.number_input("Potencia [kW]", help = "Potencia de las baterías que se obtiene de multiplicar la tensión nominal y la intensidad nominal. Si no tiene claros estos valores, poner la mitad del valor de la capacidad." ,disabled= not gen, min_value=0.0)
+    arranquedBat = st.number_input("Potencia [kW]", help = "Potencia de las baterías que se obtiene de multiplicar la tensión nominal y la intensidad nominal. Si no tiene claros estos valores, poner la mitad del valor de la capacidad." ,disabled= not gen, value = capacidadBat/2.,min_value = 0.0)
     descMaxBat =  arranquedBat*1.0
 
     deshabilitadoBat = True
