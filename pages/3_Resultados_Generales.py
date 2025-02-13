@@ -134,7 +134,7 @@ if st.session_state.idComunidad>0:
 
         st.markdown("")
         st.markdown("*Gráfico 1. Valores promedios de consumo, reparto y excedentes*")
-        st.bar_chart(dfF2, horizontal = True, width = 500, stack=False,color= ["#00C42D", "#2645CB", "#FFC400"], x_label="Usuarios", y_label="kWh")
+        st.bar_chart(dfF2, horizontal = False, height = 500, width = 500, stack=False,color= ["#00C42D", "#2645CB", "#FFC400"], x_label="Usuarios", y_label="kWh")
         # st.bar_chart(matrizBarras.T,stack=False,x_label="Usuarios",y_label="kWh")
         st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
         # configuracion_colus = st.column_config.Column(
@@ -178,7 +178,7 @@ if st.session_state.idComunidad>0:
         dfCoef2 = dfCoef.copy()
         dfCoef2.index = [i for i in range(len(mConsumos))]
         st.markdown("*Gráfico 2. Valores promedios anuales de coeficientes de reparto por usuario*")
-        st.bar_chart(dfCoef2, horizontal = True, height = 500, width = 500, x_label="Usuario", y_label="%",)
+        st.bar_chart(dfCoef2, horizontal = False, height = 500, width = 500, x_label="Usuario", y_label="%",)
 
         st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
         # st.dataframe(dfCoef, width = 1000)
