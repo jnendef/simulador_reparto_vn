@@ -79,10 +79,7 @@ with tab1:
     st.markdown("### Datos Generales")
     nombreCE = st.text_input("Nombre de la comunidad *",help="Poner el nombre que tiene la comunidad.")
     ubicacion = st.text_input("Ubicación *",help="Poner el nombre de la ciudad o pueblo. Por ejemplo: Zaragoza.")
-    # descripcion = st.text_area("Descripción de la comunidad para el informe *", value = "La comunidad [Nombre] es una comunidad nueva, cuya creación está inspirada en valores como la protección del medioambiente, el desarrollo tecnológico y la aportación a la sociedad. La comunidad energética busca ayudar en la descarbonización del medioambiente, aportando recursos como la localización y la inversión inicial, esperando cumplir con los objetivos de reducir, en parte, la dependencia energética de la comunidad, de ayudar al medioambiente y la sociedad y promover la inserción de esta tecnología y ayudar en su implementación.",height=150,max_chars=5000)
-    # st.session_state.informe["descripcion"] = descripcion
-    
-    # st.markdown("### Información económica")
+  
     coste = 100000.00
     amortizacion = 1000.00
 
@@ -141,11 +138,8 @@ with tab2:
     )
 
     st.map(df, latitude="col1", longitude="col2")
-    # st.map(pd.DataFrame([latiFV,longFV],columns=["lat","long"]))
-    # nModulos = st.number_input("Número de módulos", disabled= not ce, min_value=0,step=1)
     nModulos = 10
     pPicoFV = st.number_input("Potencia pico total FV [kW]",help="Poner la potencia pico de toda la planta fotovoltaica situada en las coordenadas que se han indicado.",min_value=0.0, disabled= not ce)
-    # tipoMod = st.selectbox("Tipo",["Monocristalino", "Policristalino"], disabled= not ce)
     tipoMod = "Monocristalino"
     azimuth = st.number_input("Azimuth en grados[-90 E, 0 S, 90 O, 180 N]", disabled= not ce,min_value=-90,max_value=180,value=0,step=1)
     inclinacion = st.number_input("Inclinación en grados [0 horizontal, 90 vertical]", disabled= not ce,min_value=0,max_value=90,value=30,step=1)
@@ -158,12 +152,8 @@ with tab2:
         st.warning("Falta la latitud")
     elif longFV == "":
         st.warning("Falta la longitud")
-    # elif nModulos == 0:
-    #     st.warning("Falta el número de módulos")
     elif pPicoFV == 0.0:
         st.warning("Falta la potencia pico")
-    # elif tipoMod == "":
-    #     st.warning("Falta el tipo de módulo")
     else:
         deshabilitadoFV = False
         st.info("Ya puedes añadir la planta fotovoltaica. Asegúrate de que los datos son correctos antes de pasar al siguiente campo.")
@@ -215,10 +205,6 @@ with tab3:
 
     if descEo=="":
         st.warning("Falta la descripción")
-    # elif latiEo == "":
-    #     st.warning("Falta la latitud")
-    # elif longEo == "":
-    #     st.warning("Falta la longitud")
     elif pPicoEo == 0.0:
         st.warning("Falta la potencia pico")
     else:
@@ -449,9 +435,6 @@ with tab7:
 
     st.header("Resumen de datos")
 
-    # st.write("Comunidad Energética:")
-    # st.dataframe(dfComu.tail(1))
-
     st.write("Generadores FV:")
     st.dataframe(dfFV)
     
@@ -536,7 +519,6 @@ with tab8:
         st.session_state.running = False
 
     if st.button('Simular', disabled=((not any(st.session_state.procesosCurso)) or st.session_state.saltoSimu or st.session_state.running), type="primary", key='run_button'):
-        # if st.button("Simular",disabled= ((not any(st.session_state.procesosCurso)) or st.session_state.saltoSimu)):
         exitoSim = calcula2(st.session_state.procesosCurso,date_year)
         st.session_state.anyo = date_year
         st.session_state.saltoSimu = True
