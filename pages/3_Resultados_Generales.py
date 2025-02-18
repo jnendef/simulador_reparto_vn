@@ -184,15 +184,15 @@ if st.session_state.idComunidad>0:
 
         st.write("\n")
         st.write("\n")
-        st.markdown("## Responsabilidades")
-        st.markdown("Esta información es facilitada por endef mediante el uso de software libre desarrollado para el apoyo a las comunidades energéticas. Esta app es una herramienta informática diseñada para realizar simulaciones con fines informativos y educativos. Si bien se han implementado metodologías rigurosas para mejorar la precisión de los resultados, Endef no garantiza la exactitud ni idoneidad de los datos generados.")
+        st.markdown("###### Responsabilidades")
+        st.markdown("###### Esta información es facilitada por endef mediante el uso de software libre desarrollado para el apoyo a las comunidades energéticas. Esta app es una herramienta informática diseñada para realizar simulaciones con fines informativos y educativos. Si bien se han implementado metodologías rigurosas para mejorar la precisión de los resultados, Endef no garantiza la exactitud ni idoneidad de los datos generados.")
 
-        st.markdown("El usuario reconoce y acepta que:")
+        st.markdown("###### El usuario reconoce y acepta que:")
 
-        st.markdown("- Uso Bajo Responsabilidad Propia: El usuario es el único responsable de la aplicación de los resultados.")
+        st.markdown("###### - Uso Bajo Responsabilidad Propia: El usuario es el único responsable de la aplicación de los resultados.")
 
-        st.markdown("- Limitación de Responsabilidad: En ningún caso Endef será responsable de daños directos, indirectos, incidentales, especiales o consecuentes, incluyendo, pero sin limitarse a, pérdidas económicas, interrupciones del negocio, daños a equipos o cualquier otro perjuicio derivado del uso o incapacidad de uso del software.")
-        st.markdown("Al utilizar esta app, el usuario acepta esta exención de responsabilidad en su totalidad.")
+        st.markdown("###### - Limitación de Responsabilidad: En ningún caso Endef será responsable de daños directos, indirectos, incidentales, especiales o consecuentes, incluyendo, pero sin limitarse a, pérdidas económicas, interrupciones del negocio, daños a equipos o cualquier otro perjuicio derivado del uso o incapacidad de uso del software.")
+        st.markdown("###### Al utilizar esta app, el usuario acepta esta exención de responsabilidad en su totalidad.")
         
         col1,col2,col3 = st.columns(3)
 
