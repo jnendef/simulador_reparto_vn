@@ -261,15 +261,7 @@ with tab4:
     st.markdown("### Descripción de las Baterías")
     descBat = st.text_input("Descripción sobre las baterías", value = "BAT1", help="Poner una breve descripción para diferenciar las baterías que quiere poner entre sí, ya que puedes hacer la simulación con más de una batería.",disabled= not gen)
     tipoBat = "Litio"
-    # tipoBat = st.selectbox("Tecnología",["Litio", "Otras"],disabled= not gen)
     st.markdown("### Características técnicas")
-    
-    # voltajeBat =   st.number_input("Voltaje del sistema [V]",disabled= not gen, min_value=0.0)
-    # capacidadBat = st.number_input("Capacidad de las baterías [kWh]",disabled= not gen, min_value=0.0)
-    # cargaMaxBat =  st.number_input("Máxima carga [kWh]",disabled= not gen, min_value=0.0)
-    # cargaMinBat =  st.number_input("Mínima carga [kWh]",disabled= not gen, min_value=0.0)
-    # arranquedBat = st.number_input("Potencia de arranque [kW]",disabled= not gen, min_value=0.0)
-    # descMaxBat =   st.number_input("máxima descarga horaria [kWh]",disabled= not gen, min_value=0.0)
 
     voltajeBat =   220
     capacidadBat = st.number_input("Capacidad de las baterías [kWh]", help = "Capacidad nominal de las baterías en kWh" , value = 0.0, disabled= not gen, min_value=0.0)
@@ -284,19 +276,10 @@ with tab4:
         st.warning("Falta la descripción")
     elif tipoBat == "":
         st.warning("Falta el tipo de batería")
-    # elif voltajeBat == 0.0:
-    #     st.write("Falta el voltaje")
     elif capacidadBat == 0.0:
         st.warning("Falta la capacidad de la batería")
-    # elif cargaMaxBat == 0.0:
-    #     st.write("Falta la carga máxima")
-    # elif cargaMinBat == 0.0:
-    #     st.write("Falta la carga mínima")
     elif arranquedBat == 0.0:
-        # st.write("Falta la potencia de arranque")
         st.write("Falta la potencia")
-    # elif descMaxBat == 0.0:
-    #     st.write("Falta la máxima descarga horaria")
     else:
         deshabilitadoBat = False
         st.info("Ya puedes añadir el almacenamiento. Asegúrate de que los datos son correctos antes de pasar al siguiente campo.")
@@ -304,7 +287,6 @@ with tab4:
     AddAlmBat = st.button("Añade Almacenamiento",type="primary", disabled= (not gen and deshabilitadoBat))
 
     aux = (descBat,tipologiasBat[tipoBat],voltajeBat,capacidadBat,cargaMaxBat,cargaMinBat,arranquedBat,descMaxBat)
-    # colums = ("Descripcion","tipo","Voltaje","Capacidad","Carga Max","Carga min","Arranque","Descarga Max")
     colums = ("Descripcion","tipo","Voltaje","Capacidad","Carga Max","Carga min","Potencia","Descarga Max")
 
     dfBat = camposDataframe("baterias",aux,colums,AddAlmBat)
