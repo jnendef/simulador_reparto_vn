@@ -4,6 +4,7 @@
 import streamlit as st
 import datetime as dt
 from geopy.geocoders import Nominatim 
+from string import punctuation
 
 import base64
 # import logging
@@ -32,6 +33,9 @@ def actualizarValores(AddElem,listaElem,infoElem):
         infoElem.append(listaElem)
 
     return infoElem
+
+def comprobarStrings(mensaje):
+    return any(caracter in punctuation for caracter in mensaje)
 
 def camposDataframe(concepto, datos, columnas, add = True):
     
@@ -74,12 +78,11 @@ sub = False
 location = None
 
 with tab1:
-    st.info("Nota aclaratoria: Obligatorio cumplimentar Nombre de la comunidad y Ubicación. Recomendado realizar una descripción para el informe final")
+    st.info("Nota aclaratoria: Obligatorio cumplimentar Nombre de la comunidad y Ubicación. No emplear signos de puntuación")
     st.header("Comunidad")
     st.markdown("### Datos Generales")
     nombreCE = st.text_input("Nombre de la comunidad *",help="Poner el nombre que tiene la comunidad.")
     ubicacion = st.text_input("Ubicación *",help="Poner el nombre de la ciudad o pueblo. Por ejemplo: Zaragoza.")
-  
     coste = 100000.00
     amortizacion = 1000.00
 
@@ -87,6 +90,10 @@ with tab1:
     gralComu = None
     if nombreCE=="":
         st.write("Falta el nombre")
+    elif comprobarStrings(nombreCE):
+        st.warning("Nombre no válido. Quitar signos de puntuación.")
+    elif comprobarStrings(ubicacion):
+        st.warning("Ubicación no válida. Quitar signos de puntuación.")
     elif ubicacion == "":
         st.write("Falta la ubicación")
     else:
@@ -125,7 +132,7 @@ with tab2:
     location = st.session_state.localizador
     st.header("Generadores FV")
     st.markdown("### Formulario de incorporación generador FV")
-    descFV = st.text_input("Descripción de los generadores FV", value = "FV1",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de una planta fotovoltaica.", disabled= not ce)
+    descFV = st.text_input("Descripción de los generadores FV", value = "FV1",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de una planta fotovoltaica. No usar signos de puntuación.", disabled= not ce)
  
     latiFV = st.number_input("Latitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = location.latitude, max_value=90.0, min_value=-90.0,format="%2.6f")
     longFV = st.number_input("Longitud instalación", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los paneles", disabled= not ce, value = location.longitude, max_value=180.0, min_value=-180.0, format="%2.6f")
@@ -148,17 +155,15 @@ with tab2:
 
     if descFV=="":
         st.warning("Falta la descripción")
-    elif latiFV == "":
-        st.warning("Falta la latitud")
-    elif longFV == "":
-        st.warning("Falta la longitud")
     elif pPicoFV == 0.0:
         st.warning("Falta la potencia pico")
+    elif comprobarStrings(descFV):
+        st.warning("Descripción no válida. Quitar signos de puntuación.")
     else:
         deshabilitadoFV = False
         st.info("Ya puedes añadir la planta fotovoltaica. Asegúrate de que los datos son correctos antes de pasar al siguiente campo.")
 
-    AddGenFv = st.button("Añade Fotovoltaica",type="primary", disabled= (not ce and deshabilitadoFV))
+    AddGenFv = st.button("Añade Fotovoltaica",type="primary", disabled= (not ce or deshabilitadoFV))
 
     aux = (descFV,latiFV,longFV,nModulos,pPicoFV,tipologiasFV[tipoMod],int(azimuth),int(inclinacion))
     colums = ("Descripcion","latitud","longitud","cantidad","Wp Total","Tipo","azimuth","inclinacion")
@@ -188,7 +193,7 @@ with tab3:
     st.info("Nota aclaratoria: Si hay FV y no hay eólica, puedes pasar a la siguiente pestaña")
     st.header("Generadores eólicos")
     st.markdown("### Formulario de incorporación generador Eólico")
-    descEo = st.text_input("Descripción de los generadores eólicos", value = "EO1",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de un generador eólico.", disabled= not ce)
+    descEo = st.text_input("Descripción de los generadores eólicos", value = "EO1",help="Poner una breve descripción para diferenciarlo de otros generadores, ya que puedes hacer la simulación con más de un generador eólico. No usar signos de puntuación.", disabled= not ce)
     latiEo = st.number_input("Latitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = location.latitude,max_value=90.0,min_value=-90.0,format="%2.6f")
     longEo = st.number_input("Longitud eólico", help = "Puede obtener las coordenadas de google maps haciendo clic con el botón derecho en la ubicación de los aerogeneradores", disabled= not ce,value = location.longitude,max_value=180.0,min_value=-180.0,format="%2.6f")
     df = pd.DataFrame(
@@ -205,13 +210,15 @@ with tab3:
 
     if descEo=="":
         st.warning("Falta la descripción")
+    elif comprobarStrings(descEo):
+        st.warning("Descripción no válida. Quitar signos de puntuación.")
     elif pPicoEo == 0.0:
         st.warning("Falta la potencia pico")
     else:
         deshabilitadoEO = False
         st.info("Ya puedes añadir el aerogenerador. Asegúrate de que los datos son correctos antes de pasar al siguiente campo")
 
-    AddGenEo = st.button("Añade Eólica",type="primary", disabled= (not ce and deshabilitadoEO))
+    AddGenEo = st.button("Añade Eólica",type="primary", disabled= (not ce or deshabilitadoEO))
 
     aux = (descEo,latiEo,longEo,pPicoEo)
     colums = ("Descripcion","latitud","longitud","Wp")
@@ -245,7 +252,7 @@ with tab4:
     }
     st.header("Baterías")
     st.markdown("### Descripción de las Baterías")
-    descBat = st.text_input("Descripción sobre las baterías", value = "BAT1", help="Poner una breve descripción para diferenciar las baterías que quiere poner entre sí, ya que puedes hacer la simulación con más de una batería.",disabled= not gen)
+    descBat = st.text_input("Descripción sobre las baterías", value = "BAT1", help="Poner una breve descripción para diferenciar las baterías que quiere poner entre sí, ya que puedes hacer la simulación con más de una batería. No usar signos de puntuación.",disabled= not gen)
     tipoBat = "Litio"
     st.markdown("### Características técnicas")
 
@@ -260,6 +267,8 @@ with tab4:
 
     if descBat=="":
         st.warning("Falta la descripción")
+    elif comprobarStrings(descBat):
+        st.warning("Descripción no válida. Quitar signos de puntuación.")
     elif tipoBat == "":
         st.warning("Falta el tipo de batería")
     elif capacidadBat == 0.0:
@@ -270,7 +279,7 @@ with tab4:
         deshabilitadoBat = False
         st.info("Ya puedes añadir el almacenamiento. Asegúrate de que los datos son correctos antes de pasar al siguiente campo.")
 
-    AddAlmBat = st.button("Añade Almacenamiento",type="primary", disabled= (not gen and deshabilitadoBat))
+    AddAlmBat = st.button("Añade Almacenamiento",type="primary", disabled= (not gen or deshabilitadoBat))
 
     aux = (descBat,tipologiasBat[tipoBat],voltajeBat,capacidadBat,cargaMaxBat,cargaMinBat,arranquedBat,descMaxBat)
     colums = ("Descripcion","tipo","Voltaje","Capacidad","Carga Max","Carga min","Potencia","Descarga Max")
@@ -321,7 +330,7 @@ with tab5:
 
     st.header("Usuarios")
     tipoUser = st.selectbox("Tipología de usuario",tipologiaSB, help="Seleccionar una tipología de vivienda para los tipos de miembros de la comunidad." , disabled= not gen)
-    cantUser = st.number_input("Cantidad de usuarios con esta tipología", help="Indicar cuántos usuarios hay con la tipología seleccionada.",disabled= not gen, min_value=0,step=1)
+    cantUser = st.number_input("Cantidad de usuarios con esta tipología", help="Indicar cuántos usuarios hay con la tipología seleccionada.",disabled= not gen, min_value=1,step=1)
 
     AddUser = st.button("Añade Usuarios",type="primary", disabled= not gen)
 
