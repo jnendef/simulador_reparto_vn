@@ -13,7 +13,6 @@ import pandas as pd
 from pages.coef_scripts.agente_Basico import Agente_MySql
 
 from datetime import datetime
-# import matplotlib.pyplot as plt
 
 diccioTipo = {  "Apartamento_1adulto_calef_electrica" : 6,
                 "Apartamento_1adulto_calef_gas" : 7,

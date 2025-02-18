@@ -12,8 +12,6 @@ import pandas as pd
 
 from pages.coef_scripts.agente_Basico import Agente_MySql
 
-# import matplotlib.pyplot as plt
-
 diccioTipo = {  "Apartamento_1adulto_calef_electrica" : 6,
                 "Apartamento_1adulto_calef_gas" : 7,
                 "Piso_2adultos_1-2niños_calef_electrica_aire_ac" : 9,
@@ -130,18 +128,11 @@ if st.session_state.idComunidad>0:
         dfF2 = dfF.copy()
         dfF2.index = [i for i in range(len(mConsumos))]
 
-        # matrizBarras = np.array([mConsumos, mReparto,mExcedentes])
-
         st.markdown("")
         st.markdown("*Gráfico 1. Valores promedios de consumo, reparto y excedentes*")
         st.bar_chart(dfF2, horizontal = False, height = 500, width = 500, stack=False,color= ["#00C42D", "#2645CB", "#FFC400"], x_label="Usuarios", y_label="kWh")
-        # st.bar_chart(matrizBarras.T,stack=False,x_label="Usuarios",y_label="kWh")
+
         st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
-        # configuracion_colus = st.column_config.Column(
-        #     "Filas",
-        #     width="small"
-        # )
-        # st.dataframe(dfF,column_config = {configuracion_colus})
         st.data_editor(
                         dfF,
                         column_config={
@@ -155,16 +146,6 @@ if st.session_state.idComunidad>0:
                         height = 43 * len(mConsumos),
                     )
         st.markdown("*Tabla 1. Valores promedios de consumo, reparto y excedentes*")
-
-        # st.markdown("### Energía Repartida Total Anual Por Usuario")
-        # st.bar_chart(mReparto)
-        # dfRep = pd.DataFrame(mReparto,index=indicesUsr)
-        # st.dataframe(dfRep)
-
-        # st.markdown("### Excedentes De Energía Total Anual Por Usuario")
-        # st.bar_chart(mExcedentes)
-        # dfExc = pd.DataFrame(mExcedentes,index=indicesUsr)
-        # st.dataframe(dfExc)
 
         st.markdown("### Coeficientes de reparto")
         st.markdown("Los coeficientes de reparto son los factores por los que se multiplica la producción para obtener el reparto de la energía producida. La elección del valor de estos coeficientes es decisión de la comunidad energética y se debe aceptar por parte de los miembros de ésta.")
@@ -181,7 +162,7 @@ if st.session_state.idComunidad>0:
         st.bar_chart(dfCoef2, horizontal = False, height = 500, width = 500, x_label="Usuario", y_label="%",)
 
         st.markdown("De forma tabulada, los valores promedios anuales serían los indicados a continuación:")
-        # st.dataframe(dfCoef, width = 1000)
+
         st.data_editor(
                         dfCoef,
                         column_config={
