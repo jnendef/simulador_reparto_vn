@@ -24,7 +24,7 @@ def final1000(agente,fcStart,idComunidad):
     now = now.strftime('%Y-%m-%d %H:%M:%S') 
     sentenciaUpdate = "UPDATE leading_db.energy_community_process"
     sentenciaUpdate = sentenciaUpdate+ " SET stop = '" + now + "',"
-    sentenciaUpdate = sentenciaUpdate+ " result = 1000 ";
+    sentenciaUpdate = sentenciaUpdate+ " result = 1000 "
     sentenciaUpdate = sentenciaUpdate+ " WHERE id_energy_community = " + str(idComunidad) + " AND event_id = 30 AND start='"+ fcStart + "'"
     agente.ejecutar(sentenciaUpdate)
     agente.commitTransaction()
@@ -189,7 +189,8 @@ def consumoAdaptado (agente, id_consumer_profile, comunidadAutonoma, anyoSimulac
             
             consumo_final = select_consumo (agente,id_consumer_profile, mesConsumo, diaConsumo, horaConsumo)          
             
-        else: # 3.2- Si no fue festivo:
+        else: 
+            # 3.2- Si no fue festivo:
             # Busco el domingo más próximo a ese día del año anterior           
             if fechaAnyoDatos.weekday() == 0:
                 domingo_mas_cercano = fechaAnyoDatos - timedelta(days=1)
