@@ -73,7 +73,7 @@ try:
     st.markdown("## Coeficientes del intervalo")
     cups = st.text_input("CUPS", value="", max_chars=22)
     if cups != "" and len(cups)==22:
-        coeficientes_intervalo(start_time, end_time,df1)
+        coeficientes_intervalo(start_time, end_time,indices,df1, cups)
 
     col1,col2,col3 = st.columns(3)
 

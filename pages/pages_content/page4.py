@@ -148,11 +148,15 @@ def graficado_coef(df1,indices):
     st.line_chart(df1, x_label = "Horas", y_label = "%")
     st.write("Coeficiente Promedio en el intervalo en Porcentaje: {}".format(str(df1.mean()["Coeficiente"])[:6]))
 
-def coeficientes_intervalo(start_time, end_time,df1,cups):
+def coeficientes_intervalo(start_time, end_time,indices,df1,cups):
     coeficientes = []
-    horas = np.arange(start = start_time,stop = end_time)
-    # for i,j in enumerate(horas):
-    coeficientes.append([cups,str(10000+df1.iloc[0])[-4:],horas[0]/100])
-    dfaux = pd.DataFrame(coeficientes,columns=["cups","horas","coeficiente"])
-    st.dataframe(dfaux)
+    horasInicio = 24*(start_time-dt.datetime(st.session_state.anyo, 1, 1, 0, 0).date()).days
+    horasFin = 24*(end_time-dt.datetime(st.session_state.anyo, 1, 1, 0, 0).date()).days
+
+    horas = np.arange(start = horasInicio,stop = horasFin)
+    for i,j in enumerate(horas):
+        coeficientes.append([cups,str(10001+j)[-4:],"{:.6f}".format(df1["Coeficiente"][indices[i]]/100.0)])
+
+    dfaux = pd.DataFrame(coeficientes,columns=["CUPS","hora","Coeficiente"])
+    st.dataframe(dfaux,hide_index=True)
 
