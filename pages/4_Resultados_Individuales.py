@@ -52,10 +52,11 @@ try:
     # mReparto = [mDatos[i,:,2].sum(0) for i in range(len(datosUsr))]
     # mExcedentes = [mDatos[i,:,3].sum(0) for i in range(len(datosUsr))]
     eleccion = preparacion_lista(redListaU)
+    fecha_min = datetime(st.session_state.anyo, 1, 1, 0, 0)
+    fecha_max = datetime(st.session_state.anyo+1, 1, 1, 0, 0)
+    start_time = st.date_input("fecha inicio",value = fecha_min, min_value = fecha_min, max_value = fecha_max)
 
-    start_time = st.date_input("fecha inicio",value=datetime(st.session_state.anyo, 1, 1, 0, 0))
-
-    end_time = st.date_input("fecha fin", value=datetime(st.session_state.anyo+1, 1, 1, 0, 0))
+    end_time = st.date_input("fecha fin", value = fecha_max, min_value = fecha_min, max_value = fecha_max)
 
     df0, df1, df2, df3, df4 = dataframes_datos(start_time, end_time, eleccion, diccioUsr, mDatos)
     
