@@ -12,6 +12,7 @@ import base64
 import numpy as np
 import pandas as pd
 
+from pages.scripts.funcionesgrles import resetear
 from pages.scripts.calculos import calcula2
 from pages.pages_content.page2 import creacion_CE, instalacion_fv, instalacion_eo, confirmacion
 from pages.pages_content.page2 import instalacion_bat, registro_usuarios, registro_coeficientes
@@ -95,6 +96,11 @@ with tab8:
         exitoSim = calcula2(st.session_state.procesosCurso,date_year)
         st.session_state.anyo = date_year
         st.session_state.saltoSimu = True
+        
         if exitoSim:
             st.success("Puede ver los resultados yendo a los enlaces de Resultados Generales e Individuales de la barra lateral.")
             st.write("Momento de inicio del proceso: ", st.session_state.procesosCurso)
+            
+            a_zero = ["comunidades","usuarios","fotovolt","eolicos","baterias","usuariosCE"]
+            for i in a_zero:
+                resetear(i)
