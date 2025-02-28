@@ -47,10 +47,6 @@ try:
 
     redListaU, diccioUsr, mDatos = datos_matriz(datosUsr)
 
-    # mConsumos = [mDatos[i,:,0].sum(0) for i in range(len(datosUsr))]
-    # mCoef = [mDatos[i,:,1].mean(0) for i in range(len(datosUsr))]
-    # mReparto = [mDatos[i,:,2].sum(0) for i in range(len(datosUsr))]
-    # mExcedentes = [mDatos[i,:,3].sum(0) for i in range(len(datosUsr))]
     eleccion = preparacion_lista(redListaU)
     fecha_min = datetime(st.session_state.anyo, 1, 1, 0, 0)
     fecha_max = datetime(st.session_state.anyo+1, 1, 1, 0, 0)
