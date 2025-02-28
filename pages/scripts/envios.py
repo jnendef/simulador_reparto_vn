@@ -1,4 +1,4 @@
-from ..coef_scripts.agente_Basico import Agente_MySql
+from pages.coef_scripts.agente_Basico import Agente_MySql
 import streamlit as st
 # import pandas as pd
 
