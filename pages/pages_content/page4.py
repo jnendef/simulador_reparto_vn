@@ -53,14 +53,12 @@ def obtencion_datos_usr():
     return datosUsr
 
 def datos_matriz(datosUsr):
-    # listaUsr = []
     diccioUsr = {}
     redListaU = []
 
     mDatos = np.zeros((len(datosUsr),len(datosUsr[0][1]),4))
     for i in range(len(datosUsr)):
         claveUsr = datosUsr[i][0]
-        # listaUsr.append(claveUsr)
         if claveUsr not in redListaU:
             redListaU.append(claveUsr)
         diccioUsr[claveUsr] = i
