@@ -215,7 +215,7 @@ def Paso3(agente, idComunidad):
 
         # Paso 2.3.- Deben coincidir el número de horas de generación y consumos
         if(len(registrosDatosConsumosComunidad)!=len(registrosDatosGeneracionComunidad)):
-            logging.info("ERROR EN EL PASO 3: No coincide el número de registros de generación  respecto a los de consumo")
+            logging.info("ERROR EN EL PASO 3: No coincide el número de registros de generación respecto a los de consumo")
 
             return proceso,VectorDatosBaterias
 
@@ -230,7 +230,7 @@ def Paso3(agente, idComunidad):
 
         # Paso 4: Creamos una instancia por cada iteración (desde la segunda hora hasta el final)
 
-        for indice in range (0, len(registrosDatosGeneracionComunidad)):
+        for indice in range(len(registrosDatosGeneracionComunidad)):
 
             # Obtengo los datos para la hora
             horaDato = registrosDatosGeneracionComunidad[indice][1]
