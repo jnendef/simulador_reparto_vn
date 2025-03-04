@@ -8,6 +8,7 @@
 
 import requests
 import json
+import os
 
 import datetime
 from datetime import date
@@ -54,6 +55,14 @@ def final1001(agente,fcStart,idComunidad):
 
 def obtInfoInicio(agente):
     sentenciaObtenerIdComunidad = "SELECT * FROM leading_db.energy_community_process a WHERE ((a.event_id = 0) OR (a.event_id = 10 AND a.result =1001)) AND a.start = (SELECT max(b.start) FROM energy_community_process b WHERE a.id_energy_community = b.id_energy_community);"
+
+    records = agente.ejecutar(sentenciaObtenerIdComunidad)
+    return records
+
+### ---- METODO PARA OBTENCION DE UNA CE ---
+
+def obt_comunidad(agente, idComunidad):
+    sentenciaObtenerIdComunidad = "SELECT * FROM leading_db.energy_community_process WHERE ((event_id = 0) OR (event_id = 10 AND result =1001)) AND id_energy_community = "+str(idComunidad)+";"
 
     records = agente.ejecutar(sentenciaObtenerIdComunidad)
     return records
@@ -453,11 +462,21 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
         return proceso, VectorDatosProduccion, idComunidad
 
 if __name__ == "__main__":
+    path = os.getcwd()
+    direc = os.path.join(path,"logs")
+    if not os.path.exists(direc):
+        try:
+            os.mkdir(direc)
+        except Exception as e:
+            direc = path
+    
     logging.basicConfig(
         level=logging.DEBUG,
-        handlers=[RotatingFileHandler('./logs/LEADING_PASO1_Output.log', maxBytes=1000000, backupCount=4)],
+        handlers=[RotatingFileHandler(os.path.join(direc,'LEADING_PASO1_Output.log'), maxBytes=1000000, backupCount=4)],
         format='%(asctime)s %(levelname)s %(message)s',
         datefmt='%m/%d/%Y %I:%M:%S %p')
+
+
 
     #Paso 0: Parametros generales de la simulación
     #Obtenemos el agente de base de datos que utilizaremos durante toda la ejecución
@@ -476,6 +495,7 @@ if __name__ == "__main__":
         bisiesto = True
     
     records = obtInfoInicio(agenteEjecucionMySql)
+    # records = obt_comunidad(agenteEjecucionMySql,202)
 
     for rc in records:
         try:

@@ -10,6 +10,7 @@ import datetime as dt
 from datetime import date, timedelta
 
 import holidays
+import os
 
 import logging
 from logging.handlers import RotatingFileHandler
@@ -125,50 +126,51 @@ def usuariosXCUPS(agente,DescripcionPerfil,idComunidad):
 
 ### ---- METODO PARA HACER LA SELECT DE LA BASE DE DATOS QUE EXTRAE EL VALOR DE CONSUMO ----
 
-def select_consumo (agente,id_consumer_profile, mes, dia, hora):
+def select_consumo (agente,id_consumer_profile, anyo, mes, dia, hora):
     
     sentenciaObtenerConsumo = "SELECT consumer_profile_consumption.consumption FROM leading_db.consumer_profile_consumption WHERE "
     sentenciaObtenerConsumo = sentenciaObtenerConsumo + "id_consumer_profile = " + str(id_consumer_profile)
+    sentenciaObtenerConsumo = sentenciaObtenerConsumo + " AND year = " + str(anyo)
     sentenciaObtenerConsumo = sentenciaObtenerConsumo + " AND month = " + str(mes)
     sentenciaObtenerConsumo = sentenciaObtenerConsumo + " AND day = " + str(dia)
     sentenciaObtenerConsumo = sentenciaObtenerConsumo + " AND hour = " + str(hora) + ";"
-
-    registroConsumo = agente.ejecutar(sentenciaObtenerConsumo)[0]
-
+    try:
+        registroConsumo = agente.ejecutar(sentenciaObtenerConsumo)[0][0]
+    except Exception as ex:
+        logging.debug("ERROR EN PASO 2, No se puede obtener el registro de consumo: "+str(ex))
+    
     return registroConsumo
 
 ### ---- METODO PARA OBTENER EL VALOR DEL CONSUMO ADAPTADO ----
 
-def consumoAdaptado (agente, id_consumer_profile, comunidadAutonoma, anyoDatos:int, anyoSimulacion:int, mes:int, dia:int, hora:int):
+def consumoAdaptado (agente, id_consumer_profile, comunidadAutonoma:str, anyoDatos:int, anyoSimulacion:int, mes:int, dia:int, hora:int):
+    """
+    --------------------------------------------------------------------------
+    Pasos a seguir
+    --------------------------------------------------------------------------
 
-    # --------------------------------------------------------------------------
-    # Pasos a seguir
-    # --------------------------------------------------------------------------
+    Parámetros de entrada: año, mes, dia, hora
+    Salida: valor de consumo
 
-    # Parámetros de entrada: año, mes, dia, hora
-    # Salida: valor de consumo
+    1.- De la fecha que se nos ha pasado como argumento y de la misma fecha del año anterior camos:
+        *Año
+        *Día de la semana    
 
-    # 1.- De la fecha que se nos ha pasado como argumento y de la misma fecha del año anterior sacamos:
-        #     *Año
-        #     *Día de la semana    
+    2.- Miramos si el día que se nos ha pasado por argumento es festivo
 
+    3.- Si SI es festivo, miramos si ese día fue festivo el año anterior:
+        3.1- Si fue festivo, asignamos los mismos consumos horarios que el año anterior
+        3.2- Si no fue festivo:
+            * Busco el domingo de antes de ese día del año anterior
+            * Se asignan los consumos del domingo del año anterior
 
-    # 2.- Miramos si el día que se nos ha pasado por argumento es festivo
-
-
-    # 3.- Si SI es festivo, miramos si ese día fue festivo el año anterior:
-            #          3.1- Si fue festivo, asignamos los mismos consumos horarios que el año anterior
-            #          3.2- Si no fue festivo:
-            #                 * Busco el domingo de antes de ese día del año anterior
-            #                 * Se asignan los consumos del domingo del año anterior
-
-
-    # 4.- Si NO es festivo, miramos si ese día fue festivo el año anterior:
-            #          4.1- Si NO fue festivo, le asignamos los consumos del mismo día de la semana más próximo
-            #               al de ese mismo día del año anterior
-            #          4.2- Si SI fue festivo:
-            #                 * Buscamos el mismo día de la semana que el año pasado fue anterior al festivo
-            #                 * Se asignan los consumos de ese día
+    4.- Si NO es festivo, miramos si ese día fue festivo el año anterior:
+        4.1- Si NO fue festivo, le asignamos los consumos del mismo día de la semana más próximo
+        al de ese mismo día del año anterior
+        4.2- Si SI fue festivo:
+            * Buscamos el mismo día de la semana que el año pasado fue anterior al festivo
+            * Se asignan los consumos de ese día
+    """
 
     # 1.- Vemos qué día de la semana es la fecha que se nos ha pasado en el año de la simulación y en el año del que se tienen los datos
     anyoAux = anyoDatos
@@ -188,11 +190,12 @@ def consumoAdaptado (agente, id_consumer_profile, comunidadAutonoma, anyoDatos:i
         # 3.- Si SI es festivo, miramos si ese día fue festivo el año anterior:
         if fechaAnyoDatos in festivosAnyoDatos: 
             # 3.1- Si fue festivo, asignamos los mismos consumos horarios que el año anterior
+            anyoConsumo = anyoDatos
             mesConsumo = fechaAnyoDatos.month
             diaConsumo = fechaAnyoDatos.day
             horaConsumo = hora
             
-            consumo_final = select_consumo (agente,id_consumer_profile, mesConsumo, diaConsumo, horaConsumo)          
+            consumo_final = select_consumo (agente,id_consumer_profile, anyoConsumo, mesConsumo, diaConsumo, horaConsumo)          
             
         else: 
             # 3.2- Si no fue festivo:
@@ -208,13 +211,13 @@ def consumoAdaptado (agente, id_consumer_profile, comunidadAutonoma, anyoDatos:i
                 domingo_mas_cercano = fechaAnyoDatos + timedelta(days=dias_hasta_domingo)
  
             # Se asignan los consumos del domingo del año anterior
+            anyoConsumo = anyoDatos
             mesConsumo = domingo_mas_cercano.month
             diaConsumo = domingo_mas_cercano.day
             horaConsumo = hora
             
-            consumo_final = select_consumo (agente,id_consumer_profile, mesConsumo, diaConsumo, horaConsumo)          
-       
-            
+            consumo_final = select_consumo (agente,id_consumer_profile, anyoConsumo, mesConsumo, diaConsumo, horaConsumo)          
+
     # 4.- Si NO es festivo, miramos si ese día fue festivo el año anterior:
     else:
         # Calculamos la diferencia de dias entre una fecha del año de la simulacion y la misma fecha del año de los datos
@@ -227,25 +230,27 @@ def consumoAdaptado (agente, id_consumer_profile, comunidadAutonoma, anyoDatos:i
         # 4.2- Si SI fue festivo:
         if fechaAnyoDatos in festivosAnyoDatos: 
             # Buscamos el mismo día de la semana que el año pasado fue anterior al festivo
-            fechaAnyoDatos = fechaAnyoDatos - timedelta(days=7-nuevo_delta)                  
+            fechaAnyoDatosaux = fechaAnyoDatos - timedelta(days=7-nuevo_delta)                  
 
             # Se asignan los consumos de ese día
-            mesConsumo = fechaAnyoDatos.month
-            diaConsumo = fechaAnyoDatos.day
+            anyoConsumo = anyoDatos
+            mesConsumo = fechaAnyoDatosaux.month
+            diaConsumo = fechaAnyoDatosaux.day
             horaConsumo = hora
             
-            consumo_final = select_consumo (agente,id_consumer_profile, mesConsumo, diaConsumo, horaConsumo)          
+            consumo_final = select_consumo (agente,id_consumer_profile, anyoConsumo, mesConsumo, diaConsumo, horaConsumo)          
                
         # 4.1- Si NO fue festivo, le asignamos los consumos del mismo día de la semana más próximo al de ese mismo día del año anterior
         else: 
-            fechaAnyoDatos = fechaAnyoDatos + timedelta(days=nuevo_delta)
-            mesConsumo = fechaAnyoDatos.month
-            diaConsumo = fechaAnyoDatos.day
+            fechaAnyoDatosaux = fechaAnyoDatos + timedelta(days=nuevo_delta)
+            anyoConsumo = anyoDatos
+            mesConsumo = fechaAnyoDatosaux.month
+            diaConsumo = fechaAnyoDatosaux.day
             horaConsumo = hora
             
-            consumo_final = select_consumo (agente,id_consumer_profile, mesConsumo, diaConsumo, horaConsumo)          
+            consumo_final = select_consumo (agente,id_consumer_profile, anyoConsumo, mesConsumo, diaConsumo, horaConsumo)          
   
-    return (consumo_final)
+    return consumo_final
 
 
 ### ---- BLOQUE PRINCIPAL DEL PROGRAMA ----    
@@ -313,12 +318,7 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
             registroDescripcionPerfil = agente.cursor.fetchone()
             DescripcionPerfil = registroDescripcionPerfil[0]
             
-            CupsBool = True
-            # Miramos si empieza por "ESxxx"
-            if DescripcionPerfil[:1] == "ES":
-                idNewUser, InsertarDatos = usuariosXCUPS(agente, DescripcionPerfil, idComunidad)
-            else:
-                idNewUser, InsertarDatos = usuariosTipo(agente,idComunidad,id_consumer_profile)
+            idNewUser, InsertarDatos = usuariosTipo(agente,idComunidad,id_consumer_profile)
 
             # Obtenemos los datos del perfil y los asociamos al nuevo usuario
             sentenciaObtenerPerfilUsuario = "SELECT consumer_profile_consumption.year, consumer_profile_consumption.month, consumer_profile_consumption.day, consumer_profile_consumption.hour, consumer_profile_consumption.consumption FROM leading_db.consumer_profile_consumption WHERE id_consumer_profile = " + str(id_consumer_profile)
@@ -328,52 +328,49 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
 
             # Recorremos cada uno de los datos correspondientes al perfil y los almacenamos en un   vector de tuplas de datos
 
-            if InsertarDatos:
-                for datoPerfilUsario in registroDatosPerfilUsuario:
-                    anyoDato = datoPerfilUsario[0]
-                    anyoDato = int(anyoDato)
-                    mes = datoPerfilUsario[1]
-                    mes = int(mes)
-                    dia = datoPerfilUsario[2]
-                    dia = int(dia)
-                    hora = datoPerfilUsario[3]
-                    hora = int(hora)
-                    salto = False
+            for datoPerfilUsario in registroDatosPerfilUsuario:
+                anyoDato = datoPerfilUsario[0]
+                anyoDato = int(anyoDato)
+                mes = datoPerfilUsario[1]
+                mes = int(mes)
+                dia = datoPerfilUsario[2]
+                dia = int(dia)
+                hora = datoPerfilUsario[3]
+                hora = int(hora)
+                salto = False
 
-                    if mes == 2 and dia ==29:       
-                        # significa que tenemos datos reales de un año bisiesto
-                        salto = True
+                if mes == 2 and dia ==29:       
+                    # significa que tenemos datos reales de un año bisiesto
+                    salto = True
 
-                    # if CupsBool and not salto:  # Si tenemos datos reales de CUPS
-                    if not salto:
+                if not salto:
+                    # Llamamos a la función que nos devuelve un consumo para la fecha   indicada a partir de los datos del año anterior y teniendo en  cuenta festivos y fines de semana
+                    valorConsumo = consumoAdaptado (agente, id_consumer_profile, comunidadAutonoma, anyoDato, anyoSimulacion, mes,  dia, hora)
 
-                        # Llamamos a la función que nos devuelve un consumo para la fecha   indicada a partir de los datos del año anterior y teniendo en  cuenta festivos y fines de semana
-                        valorConsumo = consumoAdaptado (agente, id_consumer_profile, comunidadAutonoma, anyoDato, anyoSimulacion, mes,  dia, hora)
+                    # Componemos la fecha a insertar
+                    dateConsumo = date(anyoSimulacion, mes, dia)
+                    dateConsumo = str(dateConsumo) + " " + str(hora) + ":" + "00:00"
 
-                        # Componemos la fecha a insertar
-                        dateConsumo = date(anyoSimulacion, mes, dia)
-                        dateConsumo = str(dateConsumo) + " " + str(hora) + ":" + "00:00"
+                    #Componemos el vector de datos a insertar
+                    TuplaVectorDatosConsumo = [str(idNewUser),str(dateConsumo),valorConsumo,0,0,0]
+                    VectorDatosConsumo.append(TuplaVectorDatosConsumo)
 
-                        #Componemos el vector de datos a insertar
-                        TuplaVectorDatosConsumo = [str(idNewUser),str(dateConsumo),valorConsumo,0,0,0]
-                        VectorDatosConsumo.append(TuplaVectorDatosConsumo)
+                # Si el año es bisiesto, duplicamos los datos del día 28/02 en el día 29/02
 
-                    # Si el año es bisiesto, duplicamos los datos del día 28/02 en el día 29/02
+                if bisiesto and mes==2 and dia==28:
+                    # Componemos la fecha a insertar
+                    dateConsumo = date(anyoSimulacion, 2, 29)
+                    dateConsumo = str(dateConsumo) + " " + str(hora) + ":" + "00:00"
 
-                    if bisiesto and mes==2 and dia==28:
-                        # Componemos la fecha a insertar
-                        dateConsumo = date(anyoSimulacion, 2, 29)
-                        dateConsumo = str(dateConsumo) + " " + str(hora) + ":" + "00:00"
+                    #Componemos el vector de datos a insertar
+                    TuplaVectorDatosConsumo = [str(idNewUser),str(dateConsumo),valorConsumo,0,0,0]
+                    VectorDatosConsumo.append(TuplaVectorDatosConsumo)
 
-                        #Componemos el vector de datos a insertar
-                        TuplaVectorDatosConsumo = [str(idNewUser),str(dateConsumo),valorConsumo,0,0,0]
-                        VectorDatosConsumo.append(TuplaVectorDatosConsumo)
-
-        # Ejecutamos el insert en base de datos para todos los datos del nuevo usuario    que están almacenados en el vector de datos a insertar
-        sentenciaInsertNuevoDatoPerfil = "INSERT INTO leading_db.user_data (id_user, timestamp, consumption, partition_coefficient, partition_energy, partition_surplus_energy) VALUES(%s, %s, %s, %s, %s, %s)"
-                
-        agente.ejecutarMuchos(sentenciaInsertNuevoDatoPerfil, VectorDatosConsumo)
-        agente.commitTransaction()
+            # Ejecutamos el insert en base de datos para todos los datos del nuevo usuario    que están almacenados en el vector de datos a insertar
+            sentenciaInsertNuevoDatoPerfil = "INSERT INTO leading_db.user_data (id_user, timestamp, consumption, partition_coefficient, partition_energy, partition_surplus_energy) VALUES(%s, %s, %s, %s, %s, %s)"
+                    
+            agente.ejecutarMuchos(sentenciaInsertNuevoDatoPerfil, VectorDatosConsumo)
+            agente.commitTransaction()
 
         # Indicamos que la ejecución ha acabado correctamente
         final1000(agente,fcStart,idComunidad)
@@ -390,9 +387,17 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
         return proceso, VectorDatosConsumo
     
 if __name__ == "__main__":
+    path = os.getcwd()
+    direc = os.path.join(path,"logs")
+    if not os.path.exists(direc):
+        try:
+            os.mkdir(direc)
+        except Exception as e:
+            direc = path
+    
     logging.basicConfig(
         level=logging.DEBUG,
-        handlers=[RotatingFileHandler('./logs/LEADING_PASO2_Output.log', maxBytes=1000000, backupCount=4)],
+        handlers=[RotatingFileHandler(os.path.join(direc,'LEADING_PASO2_Output.log'), maxBytes=1000000, backupCount=4)],
         format='%(asctime)s %(levelname)s %(message)s',
         datefmt='%m/%d/%Y %I:%M:%S %p')
 
@@ -413,7 +418,7 @@ if __name__ == "__main__":
         bisiesto = True
 
     ids_Comunidades = compruebaSiEjecutar(agenteEjecucionMySql)
-    Paso2(agenteEjecucionMySql,199, bisiesto, date_year.year)
+    Paso2(agenteEjecucionMySql,202, bisiesto, date_year.year)
     # for ids in ids_Comunidades:
     #     try:
     #         Paso2(agenteEjecucionMySql,199, bisiesto, date_year.year)
