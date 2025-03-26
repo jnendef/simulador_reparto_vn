@@ -7,7 +7,7 @@ from geopy.geocoders import Nominatim
 from string import punctuation
 
 import base64
-# import logging
+import logging
 
 import numpy as np
 import pandas as pd
@@ -16,6 +16,8 @@ from pages.scripts.funcionesgrles import resetear
 from pages.scripts.calculos import calcula2
 from pages.pages_content.page2 import creacion_CE, instalacion_fv, instalacion_eo, confirmacion
 from pages.pages_content.page2 import instalacion_bat, registro_usuarios, registro_coeficientes
+
+logging.getLogger("geopy").setLevel(logging.ERROR)
 
 #Creacion de un localizador de coordenadas
 geolocator = Nominatim(user_agent="aplication")
