@@ -81,7 +81,7 @@ def Paso4(agente, Anyo, id_EnergyCommunity, bisiesto):
 
     try:
         #Mostramos en el log el inicio de la realizacion de la tarea
-        print(" --- COMIENZO PROCESO OBTENCION DE LOS COEFICIENTES DE REPARTO CE " + str(id_EnergyCommunity) + "--- ")
+        logging.info(" --- COMIENZO PROCESO OBTENCION DE LOS COEFICIENTES DE REPARTO CE " + str(id_EnergyCommunity) + "--- ")
 
         #Paso 0: Parametros generales de la simulacion
         agenteEjecucionMySql = agente
