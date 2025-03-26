@@ -8,6 +8,7 @@ from pages.scripts.funcionesgrles import comprobarStrings, camposDataframe, borr
 import datetime as dt
 import numpy as np
 import pandas as pd
+import logging
 
 def creacion_CE(geolocator,ce):
     st.info("Nota aclaratoria: Obligatorio cumplimentar Nombre de la comunidad y Ubicación. No emplear signos de puntuación")
@@ -444,11 +445,13 @@ def confirmacion(datos):
                     st.session_state.informe["cantidadUsers"] = numeroUsers
 
                     st.write("Exportación realizada, ID de la comunidad: ",idComunidad)
+                    sub = True
+                    st.session_state.envioInfo = True
                 except Exception as e:
+                    logging.error("En el envío de los datos: ", exc_info=True)
+                    st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si el error persiste, consulte los logs o hable con el administrador.")
                     st.write("Error en el envío")
-                    st.write(e)
-            sub = True
-            st.session_state.envioInfo = True
+            
     if sub:
         st.success("Puede pasar a la pestaña de simulación para realizar la simulación de producción, consumos y reparto energético para el año que seleccione.")
 
