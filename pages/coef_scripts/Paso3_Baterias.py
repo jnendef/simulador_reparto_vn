@@ -155,7 +155,7 @@ def Paso3(agente, idComunidad):
     VectorDatosBaterias = []
 
     try:
-        print (" --- SCRIPT SIMULACION COMPORTAMIENTO BATERIA COMUNIDAD ENERGÉTICA CE " + str(idComunidad) + " --- ")
+        logging.info (" --- SCRIPT SIMULACION COMPORTAMIENTO BATERIA COMUNIDAD ENERGÉTICA CE " + str(idComunidad) + " --- ")
         # Establemos en el energy_community_process la fecha de comienzo
 
         fcStart = datetime.datetime.now()

@@ -281,7 +281,7 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
     try:
 
         # Impresión del mensaje de bienvenida
-        print (" --- COMIENZO PROCESO CREACION DE USUARIOS A PARTIR DE PERFILES CE " + str(idComunidad) + " --- ")
+        logging.info (" --- COMIENZO PROCESO CREACION DE USUARIOS A PARTIR DE PERFILES CE " + str(idComunidad) + " --- ")
 
         # Establemos en el energy_community_process la fecha de comienzo
 

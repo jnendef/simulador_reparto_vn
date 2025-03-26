@@ -61,20 +61,38 @@ with tab3:
     dfEO, numeroEO, eo = instalacion_eo(ce, eo)
 
 with tab4:
-    dfBat, numeroBat = instalacion_bat(ce, fv, eo, gen)
+    try:
+        dfBat, numeroBat = instalacion_bat(ce, fv, eo, gen)
 
+    except Exception as e:
+        logging.error("En las baterías: ", exc_info=True)
+        st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si el error persiste, consulte los logs o hable con el administrador.")
+        
 with tab5:
     if fv or eo:
         gen = True
-    dfUs, numeroUsers, usr = registro_usuarios(ce, gen, usr)
+    try:
+        dfUs, numeroUsers, usr = registro_usuarios(ce, gen, usr)
+    
+    except Exception as e:
+        logging.error("En los usuarios: ", exc_info=True)
+        st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si el error persiste, consulte los logs o hable con el administrador.")
 
 with tab6:
-    
-    registro_coeficientes(numeroUsers,comunidadEnerg)
+    try:
+        registro_coeficientes(numeroUsers,comunidadEnerg)
+    except Exception as e:
+        logging.error("En los coeficinetes: ", exc_info=True)
+        st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si el error persiste, consulte los logs o hable con el administrador.")
 
 with tab7:
     datos=[comunidadEnerg, dfComu, ce, dfFV, numeroFV, dfEO, numeroEO, dfBat, numeroBat, gen, dfUs, numeroUsers, usr]
-    confirmacion(datos)
+    try:
+        confirmacion(datos)
+    except Exception as e:
+        logging.error("En la confirmación de los datos: ", exc_info=True)
+        st.error("Error en la ejecución del programa, pruebe a ir a la pestaña de acceso, recargar la página y volver a ingresar los datos. Si el error persiste, consulte los logs o hable con el administrador.")
+    
 
 with tab8:
 

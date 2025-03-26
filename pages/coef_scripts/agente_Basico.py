@@ -85,7 +85,7 @@ class Agente_MySql(metaclass=SingletonMeta):
                             port=int(config.get('Database_Server','port')),
                             database=config.get('Database_Server','database'))
             self.cursor = self.conn.cursor()
-            print("conexión realizada")
+            logging.info("conexión realizada")
 
         except mysql.connector.Error as e:
             mensaje = "Error conectando a MariaDB Platform: "
@@ -194,7 +194,7 @@ class Agente_MySql(metaclass=SingletonMeta):
 
         except Exception as e :
             mensaje = "Excepcion MySqlAgent.commitTransaction: "
-            logging.error(mensaje, exc_info=True)
+            logging.info(mensaje, exc_info=True)
             pass
         
         return
@@ -223,5 +223,5 @@ class Agente_MySql(metaclass=SingletonMeta):
             
         except Exception as e :
             mensaje = "Error en el MySqlAgent.rollBackTransaction: "
-            logging.error(mensaje, exc_info=True)
+            logging.info(mensaje, exc_info=True)
 
