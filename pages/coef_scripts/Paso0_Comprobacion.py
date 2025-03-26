@@ -59,7 +59,7 @@ def comprobacionCE(agente,datos):
             logging.info("Falta especificar el coste de la instalacion") 
             return False,datosCE
     except:
-        logging.debug("No se pudo convertir el coste a cifra")
+        logging.warning("No se pudo convertir el coste a cifra")
         return False,datosCE
     
     try:
@@ -67,7 +67,7 @@ def comprobacionCE(agente,datos):
             logging.info("Falta especificar el valor de la amortizacion de la instalacion") 
             return False,datosCE
     except:
-        logging.debug("No se pudo convertir la amortizacion en cifra")
+        logging.warning("No se pudo convertir la amortizacion en cifra")
         return False,datosCE
     
     if datosCE['id_administrator'] == "":
@@ -79,7 +79,7 @@ def comprobacionCE(agente,datos):
             logging.info("Fallo en la participacion maxima, no esta en el rango")
             return False,datosCE
     except:
-        logging.debug("No se pudo convertir la participacion maxima de la comunidad en cifra")
+        logging.warning("No se pudo convertir la participacion maxima de la comunidad en cifra")
         return False,datosCE
 
     try:
@@ -87,7 +87,7 @@ def comprobacionCE(agente,datos):
             logging.info("Fallo en la participacion minima, no esta en el rango")
             return False,datosCE
     except:
-        logging.debug("No se pudo convertir la participacion minima de la comunidad en cifra")
+        logging.warning("No se pudo convertir la participacion minima de la comunidad en cifra")
         return False,datosCE
     
     try:
@@ -95,7 +95,7 @@ def comprobacionCE(agente,datos):
             logging.info("Fallo en la pobreza energetica, no esta en el rango")
             return False,datosCE
     except:
-        logging.debug("No se pudo convertir la participacion de pobreza energetica de la comunidad en cifra")
+        logging.warning("No se pudo convertir la participacion de pobreza energetica de la comunidad en cifra")
         return False,datosCE
     # El campo 'simulation_type' no está definido correctamente en la documentacion. Existe el campo pero no queda claro que tenga utilidad 
     return True,datosCE
@@ -127,7 +127,7 @@ def comprobacionUS(agente,datos):
                 logging.info("Falta el dato incremental del identificador del perfil de consumo") 
                 return False,datosUs
         except:
-            logging.debug("No se pudo convertir el id_energy_community_consumer_profile a cifra")
+            logging.error("No se pudo convertir el id_energy_community_consumer_profile a cifra")
             return False,datosUs
         
         try:
@@ -135,7 +135,7 @@ def comprobacionUS(agente,datos):
                 logging.info("Falta el dato incremental del identificador del perfil") 
                 return False,datosUs
         except:
-            logging.debug("No se pudo convertir el id_consumer_profile a cifra")
+            logging.error("No se pudo convertir el id_consumer_profile a cifra")
             return False,datosUs
     
     return True,datosUs
@@ -259,7 +259,7 @@ if __name__ == "__main__":
         okey,datos,datosUs,datosCe,datosGen,datosBat = comprobacionDb(agenteEjecucionMySql,rc)
         if not okey:
             print("Error, mire los logs")
-            logging.info("Algo fue mal en la comunidad: "+str(rc[1]))
+            logging.warning("Algo fue mal en la comunidad: "+str(rc[1]))
         else:
             print("Todo en orden")
 

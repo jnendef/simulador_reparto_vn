@@ -427,7 +427,7 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
                 
             except Exception as e:
                 proceso = False
-                logging.debug("ERROR EN EL PASO 1: EXCEPCION EN LA OPERACION DE BASE DE DATOS, "+str(e))
+                logging.error("ERROR EN EL PASO 1: EXCEPCION EN LA OPERACION DE BASE DE DATOS, ", exc_info=True)
                 final1001(agente, fcStart, idComunidad)
 
                 return proceso, VectorDatosProduccion, idComunidad
@@ -438,7 +438,7 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
                 agente.ejecutar(sentenciaDelete)
                 agente.commitTransaction()
             except Exception as e:
-                logging.debug("ERROR EN EL BORRADO EN LA BASE DE DATOS EN EL PASO 1: "+str(e))
+                logging.info("FALLO EN EL BORRADO EN LA BASE DE DATOS EN EL PASO 1: ", exc_info=True)
 
         if proceso:
             try:
@@ -446,7 +446,7 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
                 agente.ejecutarMuchos(sentenciaInsert, VectorDatosProduccion)
                 agente.commitTransaction()
             except Exception as e:
-                logging.debug("ERROR EN INSERCION DE MUCHOS EN BASE DE DATOS EN EL PASO 1: "+str(e))
+                logging.error("ERROR EN INSERCION DE MUCHOS EN BASE DE DATOS EN EL PASO 1: ", exc_info=True)
 
         # Indicamos que la ejecución ha acabado correctamente   
         final1000(agente,fcStart,idComunidad)
@@ -454,7 +454,7 @@ def Paso1(agente, records, anyoDatosGuardarComunidad, bisiesto):
     # Si ocurre un error lo indicamos
     except Exception as e:
         proceso = False
-        logging.debug("ERROR EN EL PASO 1: EXCEPCION EN LA EJECUCION DEL PROCESO: "+str(e))
+        logging.error("ERROR EN EL PASO 1: EXCEPCION EN LA EJECUCION DEL PROCESO: ", exc_info=True)
 
         final1001(agente, fcStart, idComunidad)
 
@@ -501,6 +501,6 @@ if __name__ == "__main__":
         try:
             Paso1(agenteEjecucionMySql, rc, anyoDatosGuardarComunidad, bisiesto)
         except Exception as e:
-            logging.debug("Fallo Paso 1: " + str(e))
+            logging.debug("Fallo Paso 1: ", exc_info=True)
 
     agenteEjecucionMySql.cursor.close()

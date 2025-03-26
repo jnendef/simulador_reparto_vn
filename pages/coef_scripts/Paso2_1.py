@@ -137,7 +137,7 @@ def select_consumo (agente,id_consumer_profile, anyo, mes, dia, hora):
     try:
         registroConsumo = agente.ejecutar(sentenciaObtenerConsumo)[0][0]
     except Exception as ex:
-        logging.debug("ERROR EN PASO 2, No se puede obtener el registro de consumo: "+str(ex))
+        logging.error("ERROR EN PASO 2, No se puede obtener el registro de consumo: ", exc_info=True)
     
     return registroConsumo
 
@@ -378,7 +378,7 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
     ### PASO 8: Si ocurre un error lo indicamos
     except Exception as ex:
         proceso = False
-        logging.debug("ERROR EN PASO 2: EXCEPCION EN LA EJECUCION DEL PROCESO: "+str(ex))
+        logging.error("ERROR EN PASO 2: EXCEPCION EN LA EJECUCION DEL PROCESO: ", exc_info=True)
 
         # Actulizamos la entrada correspondiente al proceso
         final1001(agente, fcStart, idComunidad)
@@ -423,6 +423,6 @@ if __name__ == "__main__":
     #     try:
     #         Paso2(agenteEjecucionMySql,199, bisiesto, date_year.year)
     #     except Exception as e:
-    #         logging.debug("Fallo Paso 2: " + str(e))
+    #         logging.debug("Fallo Paso 2: " , exc_info=True)
 
     agenteEjecucionMySql.cursor.close()
