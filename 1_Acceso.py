@@ -22,7 +22,7 @@ if not os.path.exists(direc):
         direc = path
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.WARNING,
     handlers=[RotatingFileHandler(os.path.join(direc,"LEADING_PASOS_Output.log"), maxBytes=1000000, backupCount=4)],
     format='%(asctime)s %(levelname)s %(message)s',
     datefmt='%m/%d/%Y %I:%M:%S %p')

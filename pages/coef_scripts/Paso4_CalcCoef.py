@@ -115,7 +115,7 @@ def Paso4(agente, Anyo, id_EnergyCommunity, bisiesto):
             try:
                 comunidadEnergetica = ComunidadesEnergeticasServicio.obtenerDatosComunidadEnergeticaDesdeBBDD(agenteEjecucionMySql, str(id_EnergyCommunity), simulacion_fcDesde, simulacion_fcHasta, Dias=dias, Horas=horas)
             except Exception as e:
-                logging.debug("ERROR EN " + str(id_EnergyCommunity) + " PASO 4.1 DE OBTENCION DE DATOS DE LA BD: "+ str(e))
+                logging.debug("ERROR EN " + str(id_EnergyCommunity) + " PASO 4.1 DE OBTENCION DE DATOS DE LA BD: ", exc_info=True)
                 proceso = False
 
                 final1001(agenteEjecucionMySql,fcStart,idEnergyCommunity)
@@ -126,7 +126,7 @@ def Paso4(agente, Anyo, id_EnergyCommunity, bisiesto):
                 try:
                     comunidadEnergetica.variacionObtencionCoef()
                 except Exception as e:
-                    logging.debug("ERROR EN " + str(id_EnergyCommunity) + " EN EL CALCULO DE COEFICIENTES DE REPARTO DEL PASO 4.2: "+str(e))
+                    logging.debug("ERROR EN " + str(id_EnergyCommunity) + " EN EL CALCULO DE COEFICIENTES DE REPARTO DEL PASO 4.2: ", exc_info=True)
                     proceso = False
                     final1001(agenteEjecucionMySql,fcStart,idEnergyCommunity)
 
@@ -142,7 +142,7 @@ def Paso4(agente, Anyo, id_EnergyCommunity, bisiesto):
                 try:
                     comunidadEnergetica.obtenerPrevisionEnergiaAsignadaByCoeficientesReparto()
                 except Exception as e:
-                    logging.debug("ERROR EN " + str(id_EnergyCommunity) + " EN EL REPARTO ENERGETICO DEL PASO 4.3: "+ str(e))
+                    logging.debug("ERROR EN " + str(id_EnergyCommunity) + " EN EL REPARTO ENERGETICO DEL PASO 4.3: ", exc_info=True)
                     proceso = False
                     final1001(agenteEjecucionMySql,fcStart,idEnergyCommunity)
                     return proceso, comunidadEnergetica
@@ -157,7 +157,7 @@ def Paso4(agente, Anyo, id_EnergyCommunity, bisiesto):
                 try:
                     comunidadEnergetica.obtenerPrevisionExcedenteAsignadoByCoeficientesReparto()
                 except Exception as e:
-                    logging.debug("ERROR EN " + str(id_EnergyCommunity) + " EN EL CALCULO DE EXCEDENTES PASO 4.4: "+str(e))
+                    logging.debug("ERROR EN " + str(id_EnergyCommunity) + " EN EL CALCULO DE EXCEDENTES PASO 4.4: ", exc_info=True)
                     proceso = False
                     final1001(agenteEjecucionMySql,fcStart,idEnergyCommunity)
                     return proceso, comunidadEnergetica
@@ -172,7 +172,7 @@ def Paso4(agente, Anyo, id_EnergyCommunity, bisiesto):
                 try:
                     comunidadEnergetica.obtenerCuotaUtilizacionUsuariosComunidadEnergetica()
                 except Exception as e:
-                    logging.debug("ERROR EN " + str(id_EnergyCommunity) + " EN LA CUOTA DE UTILIZACION PASO 4.5: "+str(e))
+                    logging.debug("ERROR EN " + str(id_EnergyCommunity) + " EN LA CUOTA DE UTILIZACION PASO 4.5: ", exc_info=True)
                     proceso = False
                     final1001(agenteEjecucionMySql,fcStart,idEnergyCommunity)
                     return proceso, comunidadEnergetica
@@ -188,12 +188,12 @@ def Paso4(agente, Anyo, id_EnergyCommunity, bisiesto):
                     ComunidadesEnergeticasServicio.eliminarDatosUsuarios(agenteEjecucionMySql,comunidadEnergetica)
                     proceso = ComunidadesEnergeticasServicio.almacenarDatosCalculadosComunidadEnergetica(agenteEjecucionMySql, comunidadEnergetica)
                 except Exception as e:
-                    logging.debug("ERROR EN " + str(id_EnergyCommunity) + " EN EL ALMACENAJE DE LOS DATOS EN BD PASO 4.6: "+str(e))
+                    logging.error("ERROR EN " + str(id_EnergyCommunity) + " EN EL ALMACENAJE DE LOS DATOS EN BD PASO 4.6: ", exc_info=True)
                     proceso = False
                     final1001(agenteEjecucionMySql,fcStart,idEnergyCommunity)
                     return proceso, None
             else: 
-                logging.debug("EN " + str(id_EnergyCommunity) + " El proceso se ha parado en el PASO 4.6")
+                logging.error("EN " + str(id_EnergyCommunity) + " El proceso se ha parado en el PASO 4.6")
                 proceso = False
                 final1001(agenteEjecucionMySql,fcStart,idEnergyCommunity)
                 return proceso, None
@@ -208,14 +208,14 @@ def Paso4(agente, Anyo, id_EnergyCommunity, bisiesto):
 
             return proceso, comunidadEnergetica
         else:
-            logging.info("Paso 4 Calculo de coeficientes de reparto: Datos vacios (" + tiem.now().__format__('%d/%m/%Y %H:%M:%S') + ") ")
+            logging.warning("Paso 4 Calculo de coeficientes de reparto: Datos vacios (" + tiem.now().__format__('%d/%m/%Y %H:%M:%S') + ") ")
             final1001(agenteEjecucionMySql,fcStart,idEnergyCommunity)
 
             proceso = False
             return proceso, None
 
     except Exception as e:
-        logging.debug("EN " + str(id_EnergyCommunity) + " ERROR EN LA EJECUCUCIoN DEL PROCESO DEL PASO 4: " + tiem.now().__format__('%d/%m/%Y %H:%M:%S')+": "+str(e))
+        logging.error("EN " + str(id_EnergyCommunity) + " ERROR EN LA EJECUCUCIoN DEL PROCESO DEL PASO 4: ", exc_info=True)
         final1001(agenteEjecucionMySql,fcStart,idEnergyCommunity)
         proceso = False
         
@@ -257,6 +257,6 @@ if __name__ == "__main__":
         try:
             Paso4(agenteEjecucionMySql,anyoDatosGuardarComunidad,ids, bisiesto)
         except Exception as e:
-            logging.debug("Fallo Paso 4: " + str(e))
+            logging.error("Fallo Paso 4: ", exc_info=True)
     
     agenteEjecucionMySql.cursor.close()

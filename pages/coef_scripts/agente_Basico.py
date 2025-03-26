@@ -14,6 +14,8 @@ from time import sleep
 
 SLEEPING_MS = 10./1000.
 
+logging.getLogger("mysql").setLevel(logging.WARNING)
+
 class SingletonMeta(type):
     """
     The Singleton class can be implemented in different ways in Python. Some possible methods include: base class, decorator, metaclass. We will use the metaclass because it is best suited for this purpose.
@@ -87,7 +89,7 @@ class Agente_MySql(metaclass=SingletonMeta):
 
         except mysql.connector.Error as e:
             mensaje = "Error conectando a MariaDB Platform: "
-            logging.debug(mensaje+str(e))
+            logging.error(mensaje, exc_info=True)
 
     def isValidConection(self) :
         """
@@ -125,13 +127,13 @@ class Agente_MySql(metaclass=SingletonMeta):
                 # Devolvemos el relleno
                 return devuelve
             except Exception as e :
-                # mensaje = "Nada que devolver de la consulta individual: "
-                # logging.info(mensaje+str(e))
+                mensaje = "Nada que devolver de la consulta individual: "
+                logging.debug(mensaje, exc_info=True)
                 return
             
         except Exception as e :
             mensaje = "Excepcion en el MySqlAgent.execute: "
-            logging.debug(mensaje+str(e))
+            logging.warning(mensaje, exc_info=True)
             sys.exit()
 
     def ejecutarMuchos(self,sql,listaarg):
@@ -191,8 +193,8 @@ class Agente_MySql(metaclass=SingletonMeta):
             self.conn.autocommit = True
 
         except Exception as e :
-            # mensaje = "Excepcion MySqlAgent.commitTransaction: "
-            # logging.info(mensaje+str(e))
+            mensaje = "Excepcion MySqlAgent.commitTransaction: "
+            logging.error(mensaje, exc_info=True)
             pass
         
         return
@@ -221,5 +223,5 @@ class Agente_MySql(metaclass=SingletonMeta):
             
         except Exception as e :
             mensaje = "Error en el MySqlAgent.rollBackTransaction: "
-            logging.debug(mensaje+str(e))
+            logging.error(mensaje, exc_info=True)
 
