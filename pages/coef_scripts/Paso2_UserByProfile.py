@@ -388,7 +388,7 @@ def Paso2(agente, idComunidad, bisiesto, anyo = 0):
     ### PASO 8: Si ocurre un error lo indicamos
     except Exception as ex:
         proceso = False
-        logging.debug("ERROR EN PASO 2: EXCEPCION EN LA EJECUCION DEL PROCESO: "+str(ex))
+        logging.error("ERROR EN PASO 2: EXCEPCION EN LA EJECUCION DEL PROCESO: ", exc_info=True)
 
         # Actulizamos la entrada correspondiente al proceso
         final1001(agente, fcStart, idComunidad)
@@ -432,6 +432,6 @@ if __name__ == "__main__":
         try:
             Paso2(agenteEjecucionMySql,ids, bisiesto, date_year.year)
         except Exception as e:
-            logging.debug("Fallo Paso 2: " + str(e))
+            logging.error("Fallo Paso 2: ", exc_info=True)
 
     agenteEjecucionMySql.cursor.close()

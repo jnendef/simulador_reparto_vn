@@ -269,7 +269,7 @@ def Paso3(agente, idComunidad):
     # Si ocurre un error lo indicamos
     except Exception as ex:
         proceso = False
-        logging.debug("ERROR EN EL PASO 3: EXCEPCION EN LA EJECUCION DEL PROCESO: "+str(ex))
+        logging.error("ERROR EN EL PASO 3: EXCEPCION EN LA EJECUCION DEL PROCESO: ", exc_info=True)
 
         final1001(agente,fcStart,idComunidad)
 
@@ -312,6 +312,6 @@ if __name__ == "__main__":
         try:
             Paso3(agenteEjecucionMySql,ids)
         except Exception as e:
-            logging.debug("Fallo Paso 3: " + str(e))
+            logging.error("Fallo Paso 3: " , exc_info=True)
     
     agenteEjecucionMySql.cursor.close()
